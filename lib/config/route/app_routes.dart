@@ -1,24 +1,26 @@
 import 'package:get/get.dart';
 
-import 'package:flutter_code_structure/features/auth/presentation/change_password/screen/change_password_screen.dart';
-import 'package:flutter_code_structure/features/auth/presentation/forgot_password/screen/create_password.dart';
-import 'package:flutter_code_structure/features/auth/presentation/forgot_password/screen/forgot_password.dart';
-import 'package:flutter_code_structure/features/auth/presentation/forgot_password/screen/verify_screen.dart';
-import 'package:flutter_code_structure/features/auth/presentation/sign_in/screen/sign_in_screen.dart';
-import 'package:flutter_code_structure/features/auth/presentation/sign_up/screen/sign_up_screen.dart';
-import 'package:flutter_code_structure/features/auth/presentation/sign_up/screen/verify_user.dart';
+import 'package:flutter_code_structure/features/common/auth/presentation/change_password/screen/change_password_screen.dart';
+import 'package:flutter_code_structure/features/common/auth/presentation/forgot_password/screen/create_password.dart';
+import 'package:flutter_code_structure/features/common/auth/presentation/forgot_password/screen/forgot_password.dart';
+import 'package:flutter_code_structure/features/common/auth/presentation/forgot_password/screen/verify_screen.dart';
+import 'package:flutter_code_structure/features/common/auth/presentation/sign_in/screen/sign_in_screen.dart';
+import 'package:flutter_code_structure/features/common/auth/presentation/sign_up/screen/sign_up_screen.dart';
+import 'package:flutter_code_structure/features/common/auth/presentation/sign_up/screen/verify_user.dart';
 import 'package:flutter_code_structure/features/message/presentation/chat_list/screen/chat_screen.dart';
 import 'package:flutter_code_structure/features/message/presentation/message_details/screen/message_screen.dart';
 import '../../features/notifications/presentation/screen/notifications_screen.dart';
-import '../../features/onboarding_screen/onboarding_screen.dart';
+import 'package:flutter_code_structure/features/common/onboarding_screen/onboarding_screen.dart';
 import '../../features/profile/presentation/screen/edit_profile.dart';
 import '../../features/profile/presentation/screen/profile_screen.dart';
-import '../../features/splash/splash_screen.dart';
+import 'package:flutter_code_structure/features/common/role_selection/screen/role_selection_screen.dart';
+import 'package:flutter_code_structure/features/common/splash/splash_screen.dart';
 
 class AppRoutes {
   static const String test = '/test_screen.dart';
   static const String splash = '/';
   static const String onboarding = '/onboarding_screen.dart';
+  static const String roleSelection = '/role_selection_screen.dart';
   static const String signUp = '/sign_up_screen.dart';
   static const String verifyUser = '/verify_user.dart';
   static const String signIn = '/sign_in_screen.dart';
@@ -38,6 +40,7 @@ class AppRoutes {
   static List<GetPage<String>> routes = [
     GetPage(name: splash, page: () => const SplashScreen()),
     GetPage(name: onboarding, page: () => const OnboardingScreen()),
+    GetPage(name: roleSelection, page: () => const RoleSelectionScreen()),
     GetPage(name: signUp, page: () => SignUpScreen()),
     GetPage(name: verifyUser, page: () => const VerifyUser()),
     GetPage(name: signIn, page: () => SignInScreen()),

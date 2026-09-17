@@ -35,6 +35,7 @@ class CommonTextField extends StatelessWidget {
     this.isDense,
     this.suffixIcon,
     this.maxLines,
+    this.prefixIconConstraints,
   });
 
   final String? hintText;
@@ -42,6 +43,7 @@ class CommonTextField extends StatelessWidget {
   final String? prefixText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final BoxConstraints? prefixIconConstraints;
   final Color? fillColor;
   final Color? labelTextColor;
   final Color? hintTextColor;
@@ -85,7 +87,7 @@ class CommonTextField extends StatelessWidget {
           errorMaxLines: 2,
           isDense: isDense,
           filled: true,
-          prefixIconConstraints: const BoxConstraints(
+          prefixIconConstraints: prefixIconConstraints ?? const BoxConstraints(
             maxWidth: 30,
             maxHeight: 30,
           ),

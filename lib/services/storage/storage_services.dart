@@ -61,7 +61,15 @@ class LocalStorage {
     localStorage.setString(LocalStorageKeys.myImage, '');
     localStorage.setString(LocalStorageKeys.myName, '');
     localStorage.setString(LocalStorageKeys.myEmail, '');
+    localStorage.setString(LocalStorageKeys.myRole, '');
     localStorage.setBool(LocalStorageKeys.isLogIn, false);
+    myRole = '';
+  }
+
+  /// Save Selected Role
+  static Future<void> setRole(String role) async {
+    myRole = role;
+    await setString(LocalStorageKeys.myRole, role);
   }
 
   // Save Data To SharedPreferences
