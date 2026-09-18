@@ -22,8 +22,16 @@ class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SignInController>(
+      init: Get.isRegistered<SignInController>()
+          ? Get.find<SignInController>()
+          : Get.put(SignInController()),
       initState: (_) {
-        Get.find<SignInController>().initRole();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final ctrl = Get.isRegistered<SignInController>()
+              ? Get.find<SignInController>()
+              : Get.put(SignInController());
+          ctrl.initRole();
+        });
       },
       builder: (controller) {
         return Scaffold(
@@ -112,7 +120,7 @@ class SignInScreen extends StatelessWidget {
                       isPassword: true,
                       hintText: '*******',
                       borderColor: const Color(0xFFE5E7EB),
-                      validator: AppValidation.password,
+                      validator: AppValidation.required,
                     ),
 
                     SizedBox(height: 14.h),

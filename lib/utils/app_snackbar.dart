@@ -24,6 +24,15 @@ class AppSnackbar {
     );
   }
 
+  static void info({required String title, required String message}) {
+    _showSnackbar(
+      title: title,
+      message: message,
+      backgroundColor: AppColors.primaryColor,
+      position: .BOTTOM,
+    );
+  }
+
   static void _showSnackbar({
     required String title,
     required String message,

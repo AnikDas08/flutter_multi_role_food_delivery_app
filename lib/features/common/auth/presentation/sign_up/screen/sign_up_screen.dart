@@ -8,8 +8,13 @@ import 'package:flutter_code_structure/component/button/common_button.dart';
 import 'package:flutter_code_structure/component/text/common_text.dart';
 import 'package:flutter_code_structure/utils/constants/app_colors.dart';
 import 'package:flutter_code_structure/utils/extensions/extension.dart';
+import '../../../../../../config/route/app_routes.dart';
+import '../../../../../../services/storage/storage_services.dart';
 import '../controller/sign_up_controller.dart';
 import '../widgets/already_account_rich_text.dart';
+import '../widgets/driver_sign_up_view.dart';
+import '../widgets/merchant_sign_up_view.dart';
+import '../widgets/profile_image_picker_widget.dart';
 import '../widgets/sign_up_all_field.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -27,15 +32,39 @@ class SignUpScreen extends StatelessWidget {
         systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: const CommonAppBar(
-          title: 'Create an Account',
-          titleSize: 30,
-        ),
-        body: GetBuilder<SignUpController>(
-          builder: (controller) {
-            return SingleChildScrollView(
+      child: GetBuilder<SignUpController>(
+        init: Get.isRegistered<SignUpController>()
+            ? Get.find<SignUpController>()
+            : Get.put(SignUpController()),
+        initState: (_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            final ctrl = Get.isRegistered<SignUpController>()
+                ? Get.find<SignUpController>()
+                : Get.put(SignUpController());
+            final argsRole = (Get.arguments != null && Get.arguments is Map)
+                ? Get.arguments['role']
+                : null;
+            final savedRole = argsRole ?? LocalStorage.myRole;
+            if (savedRole != null && savedRole.toString().isNotEmpty) {
+              ctrl.setSelectedRole(savedRole.toString());
+            }
+          });
+        },
+        builder: (controller) {
+          if (controller.isDriver) {
+            return DriverSignUpView(controller: controller);
+          }
+          if (controller.isMerchant) {
+            return MerchantSignUpView(controller: controller);
+          }
+
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: const CommonAppBar(
+              title: 'Create an Account',
+              titleSize: 30,
+            ),
+            body: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 24.w),
               child: Form(
                 key: _formKey,
@@ -43,16 +72,24 @@ class SignUpScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     /// Header Subtitle
-                    const CommonText(
-                      text: 'Create an account or log in to\nexplore about our app',
+                    CommonText(
+                      text: controller.signUpDescription,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
-                      color: Color(0xFF6B7280),
+                      color: const Color(0xFF6B7280),
                       maxLines: 2,
                       textAlign: TextAlign.center,
                       top: 4,
                       bottom: 16,
                     ),
+
+                    /// Profile Image
+                    ProfileImagePickerWidget(
+                      controller: controller,
+                      sheetTitle: 'Customer Profile Photo',
+                    ),
+
+                    SizedBox(height: 16.h),
 
                     /// Input Fields
                     SignUpAllField(controller: controller),
@@ -84,9 +121,9 @@ class SignUpScreen extends StatelessWidget {
                   ],
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

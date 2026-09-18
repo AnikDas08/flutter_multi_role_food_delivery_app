@@ -36,6 +36,7 @@ class CommonTextField extends StatelessWidget {
     this.suffixIcon,
     this.maxLines,
     this.prefixIconConstraints,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
   });
 
   final String? hintText;
@@ -56,6 +57,7 @@ class CommonTextField extends StatelessWidget {
   final int? mexLength;
   final bool isPassword;
   final bool? isDense;
+  final AutovalidateMode? autovalidateMode;
   RxBool obscureText = false.obs;
   final Function(String)? onSubmitted;
   final Function(String)? onChanged;
@@ -70,7 +72,7 @@ class CommonTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => TextFormField(
-        autovalidateMode: .onUnfocus,
+        autovalidateMode: autovalidateMode ?? AutovalidateMode.onUserInteraction,
         keyboardType: keyboardType,
         controller: controller,
         obscureText: isPassword ? !obscureText.value : obscureText.value,

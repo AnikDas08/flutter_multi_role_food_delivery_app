@@ -36,7 +36,7 @@ class ChangePasswordScreen extends StatelessWidget {
                     controller: controller.currentPasswordController,
                     isPassword: true,
                     hintText: AppString.currentPassword,
-                    validator: AppValidation.password,
+                    validator: AppValidation.required,
                   ),
                   SizedBox(height: 16.h),
                   CommonTextField(

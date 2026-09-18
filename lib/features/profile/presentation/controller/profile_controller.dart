@@ -18,8 +18,26 @@ class ProfileController extends GetxController {
   bool isLoading = false;
 
   /// Text controllers
-  final nameController = TextEditingController();
-  final numberController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _numberController = TextEditingController();
+
+  TextEditingController get nameController {
+    try {
+      _nameController.text;
+    } catch (_) {
+      _nameController = TextEditingController();
+    }
+    return _nameController;
+  }
+
+  TextEditingController get numberController {
+    try {
+      _numberController.text;
+    } catch (_) {
+      _numberController = TextEditingController();
+    }
+    return _numberController;
+  }
 
   final ApiClient apiClient = DioApiClient();
 
@@ -90,8 +108,6 @@ class ProfileController extends GetxController {
   /// Dispose controllers
   @override
   void onClose() {
-    nameController.dispose();
-    numberController.dispose();
     super.onClose();
   }
 }

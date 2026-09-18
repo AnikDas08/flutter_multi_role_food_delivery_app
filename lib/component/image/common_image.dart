@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,13 +32,38 @@ class CommonImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (imageSrc.isEmpty) {
+      return _buildErrorWidget();
+    }
     if (imageSrc.contains('assets/icons')) {
       return _buildSvgImage();
     } else if (imageSrc.contains('assets/images')) {
       return _buildPngImage();
+    } else if (imageSrc.startsWith('/') || imageSrc.startsWith('file://')) {
+      return _buildFileImage();
     } else {
       return _buildNetworkImage();
     }
+  }
+
+  Widget _buildFileImage() {
+    final filePath = imageSrc.startsWith('file://')
+        ? imageSrc.replaceFirst('file://', '')
+        : imageSrc;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: Image.file(
+        File(filePath),
+        color: imageColor,
+        height: size?.sp ?? height?.h,
+        width: size?.sp ?? width?.w,
+        fit: fill,
+        errorBuilder: (context, error, stackTrace) {
+          errorLog(error, source: 'Common Image File');
+          return _buildErrorWidget();
+        },
+      ),
+    );
   }
 
   Widget _buildErrorWidget() {

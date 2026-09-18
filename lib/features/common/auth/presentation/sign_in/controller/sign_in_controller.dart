@@ -17,8 +17,27 @@ class SignInController extends GetxController {
             );
 
   bool isLoading = false;
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  TextEditingController get emailController {
+    try {
+      _emailController.text;
+    } catch (_) {
+      _emailController = TextEditingController();
+    }
+    return _emailController;
+  }
+
+  TextEditingController get passwordController {
+    try {
+      _passwordController.text;
+    } catch (_) {
+      _passwordController = TextEditingController();
+    }
+    return _passwordController;
+  }
+
   final RxBool rememberMe = true.obs;
   final RxString role = 'Customer'.obs;
 
@@ -48,7 +67,6 @@ class SignInController extends GetxController {
     } else {
       role.value = 'Customer';
     }
-    update();
   }
 
   String get roleTitle => 'PLOMOGO ${role.value}';
@@ -67,6 +85,12 @@ class SignInController extends GetxController {
   Future<void> signInUser() async {
     if (isLoading) return;
 
+    final selectedRole = role.value.trim().toLowerCase();
+    await LocalStorage.setRole(selectedRole);
+
+    Get.offAllNamed(AppRoutes.mainNavBar);
+    return;
+
     try {
       isLoading = true;
       update();
@@ -79,7 +103,7 @@ class SignInController extends GetxController {
       emailController.clear();
       passwordController.clear();
 
-      Get.offAllNamed(AppRoutes.profile);
+      LocalStorage.setRole(role.value.toLowerCase());
     } catch (e) {
       AppSnackbar.error(
         title: 'Sign In Failed',
@@ -93,8 +117,6 @@ class SignInController extends GetxController {
 
   @override
   void onClose() {
-    emailController.dispose();
-    passwordController.dispose();
     super.onClose();
   }
 }

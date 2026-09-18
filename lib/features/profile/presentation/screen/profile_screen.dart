@@ -32,8 +32,15 @@ class ProfileScreen extends StatelessWidget {
 
       /// Body
       body: GetBuilder<ProfileController>(
+        init: Get.isRegistered<ProfileController>() ? null : ProfileController(),
         builder: (controller) {
           final user = LocalStorage.user;
+          final userName = (user != null && user.name.isNotEmpty)
+              ? user.name
+              : (LocalStorage.myName.isNotEmpty ? LocalStorage.myName : 'User Profile');
+          final userImage = (user != null && user.image.isNotEmpty)
+              ? user.image
+              : LocalStorage.myImage;
 
           return SingleChildScrollView(
             padding: .symmetric(horizontal: 20.w, vertical: 24.h),
@@ -43,14 +50,17 @@ class ProfileScreen extends StatelessWidget {
                 16.height,
 
                 CircleAvatar(
-                  backgroundColor: Colors.transparent,
+                  radius: 70.r,
+                  backgroundColor: const Color(0xFFF1F5F9),
                   child: ClipOval(
-                    child: CommonImage(imageSrc: user!.image, size: 140),
+                    child: CommonImage(imageSrc: userImage, size: 140),
                   ),
                 ),
 
+                12.height,
+
                 /// Name
-                CommonText(text: user.name, fontSize: 18, fontWeight: .w700),
+                CommonText(text: userName, fontSize: 18, fontWeight: .w700),
 
                 24.height,
 
@@ -109,9 +119,6 @@ class ProfileScreen extends StatelessWidget {
           );
         },
       ),
-
-      /// Bottom nav
-      bottomNavigationBar: const CommonBottomNavBar(currentIndex: 3),
     );
   }
 }
