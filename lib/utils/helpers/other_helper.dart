@@ -3,6 +3,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../constants/app_colors.dart';
 
+import 'permission_helper.dart';
+
 class OtherHelper {
   OtherHelper._();
 
@@ -32,9 +34,17 @@ class OtherHelper {
   }
 
   static Future<String?> pickImage({
-    ImageSource source = .gallery,
+    ImageSource source = ImageSource.gallery,
     int quality = 50,
   }) async {
+    if (source == ImageSource.camera) {
+      final hasPerm = await AppPermissionHelper.requestCameraPermission();
+      if (!hasPerm) return null;
+    } else {
+      final hasPerm = await AppPermissionHelper.requestPhotosPermission();
+      if (!hasPerm) return null;
+    }
+
     final picker = ImagePicker();
     final XFile? image = await picker.pickImage(
       source: source,

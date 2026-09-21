@@ -17,14 +17,27 @@ import '../../features/profile/presentation/screen/profile_screen.dart';
 import 'package:flutter_code_structure/features/common/role_selection/screen/role_selection_screen.dart';
 import 'package:flutter_code_structure/features/common/splash/splash_screen.dart';
 import 'package:flutter_code_structure/features/common/nav_bar/presentation/screen/main_nav_bar_screen.dart';
-import 'package:flutter_code_structure/features/marchant/dashboard/presentation/screen/merchant_dashboard_screen.dart';
-import 'package:flutter_code_structure/features/marchant/cod_liability/presentation/screen/cod_liability_screen.dart';
-import 'package:flutter_code_structure/features/marchant/cod_liability/presentation/screen/request_settlement_screen.dart';
-import 'package:flutter_code_structure/features/marchant/cod_liability/presentation/screen/settlement_success_screen.dart';
-import 'package:flutter_code_structure/features/marchant/orders/presentation/screen/merchant_order_details_screen.dart';
-import 'package:flutter_code_structure/features/marchant/orders/presentation/screen/driver_tracking_screen.dart';
-import 'package:flutter_code_structure/features/marchant/menu/presentation/screen/add_edit_menu_screen.dart';
-import 'package:flutter_code_structure/features/marchant/drivers/presentation/screen/merchant_drivers_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/dashboard/presentation/screen/merchant_dashboard_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/cod_liability/presentation/screen/cod_liability_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/cod_liability/presentation/screen/request_settlement_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/cod_liability/presentation/screen/settlement_success_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/orders/presentation/screen/merchant_order_details_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/orders/presentation/screen/driver_tracking_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/menu/presentation/screen/add_edit_menu_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/drivers/presentation/screen/merchant_drivers_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/dashboard/presentation/screen/driver_dashboard_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/orders/presentation/screen/driver_order_details_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/earnings/presentation/screen/driver_withdraw_funds_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/earnings/presentation/screen/withdrawal_not_possible_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/earnings/presentation/screen/confirm_withdrawal_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/earnings/presentation/screen/withdrawal_success_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/earnings/presentation/screen/driver_remit_cod_liability_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/earnings/presentation/screen/bank_transfer_detail_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/profile/presentation/screen/driver_profile_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/profile/presentation/screen/driver_edit_profile_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/profile/presentation/screen/driver_linked_accounts_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/profile/presentation/screen/add_bank_account_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/profile/presentation/screen/account_verification_screen.dart';
 
 class AppRoutes {
   static const String test = '/test_screen.dart';
@@ -40,6 +53,19 @@ class AppRoutes {
   static const String driverTracking = '/driver_tracking_screen.dart';
   static const String addEditMenu = '/add_edit_menu_screen.dart';
   static const String merchantDrivers = '/merchant_drivers_screen.dart';
+  static const String driverDashboard = '/driver_dashboard_screen.dart';
+  static const String driverOrderDetails = '/driver_order_details_screen.dart';
+  static const String driverWithdrawFunds = '/driver_withdraw_funds_screen.dart';
+  static const String withdrawalNotPossible = '/withdrawal_not_possible_screen.dart';
+  static const String confirmWithdrawal = '/confirm_withdrawal_screen.dart';
+  static const String driverWithdrawalSuccess = '/withdrawal_success_screen.dart';
+  static const String driverRemitCodLiability = '/driver_remit_cod_liability_screen.dart';
+  static const String bankTransferDetail = '/bank_transfer_detail_screen.dart';
+  static const String driverProfile = '/driver_profile_screen.dart';
+  static const String driverEditProfile = '/driver_edit_profile_screen.dart';
+  static const String driverLinkedAccounts = '/driver_linked_accounts_screen.dart';
+  static const String addBankAccount = '/add_bank_account_screen.dart';
+  static const String accountVerification = '/account_verification_screen.dart';
   static const String signUp = '/sign_up_screen.dart';
   static const String verifyUser = '/verify_user.dart';
   static const String signIn = '/sign_in_screen.dart';
@@ -68,7 +94,7 @@ class AppRoutes {
     GetPage(name: verifyEmail, page: () => VerifyScreen()),
     GetPage(name: createPassword, page: () => CreatePassword()),
     GetPage(name: resetPasswordSuccess, page: () => const PasswordResetSuccessScreen()),
-    GetPage(name: changePassword, page: () => ChangePasswordScreen()),
+    GetPage(name: changePassword, page: () => const ChangePasswordScreen()),
     GetPage(name: notifications, page: () => const NotificationScreen()),
     GetPage(name: chat, page: () => const ChatListScreen()),
     GetPage(name: message, page: () => const MessageScreen()),
@@ -83,5 +109,18 @@ class AppRoutes {
     GetPage(name: driverTracking, page: () => const DriverTrackingScreen()),
     GetPage(name: addEditMenu, page: () => const AddEditMenuScreen()),
     GetPage(name: merchantDrivers, page: () => const MerchantDriversScreen()),
+    GetPage(name: driverDashboard, page: () => const DriverDashboardScreen()),
+    GetPage(name: driverOrderDetails, page: () => const DriverOrderDetailsScreen()),
+    GetPage(name: driverWithdrawFunds, page: () => const DriverWithdrawFundsScreen()),
+    GetPage(name: withdrawalNotPossible, page: () => const WithdrawalNotPossibleScreen()),
+    GetPage(name: confirmWithdrawal, page: () => const ConfirmWithdrawalScreen()),
+    GetPage(name: driverWithdrawalSuccess, page: () => const WithdrawalSuccessScreen()),
+    GetPage(name: driverRemitCodLiability, page: () => const DriverRemitCodLiabilityScreen()),
+    GetPage(name: bankTransferDetail, page: () => const BankTransferDetailScreen()),
+    GetPage(name: driverProfile, page: () => const DriverProfileScreen()),
+    GetPage(name: driverEditProfile, page: () => const DriverEditProfileScreen()),
+    GetPage(name: driverLinkedAccounts, page: () => const DriverLinkedAccountsScreen()),
+    GetPage(name: addBankAccount, page: () => const AddBankAccountScreen()),
+    GetPage(name: accountVerification, page: () => const AccountVerificationScreen()),
   ];
 }

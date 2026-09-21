@@ -13,4 +13,6 @@ class AppIcons {
   static const String profileIcon = '$baseurl/profile_icon.svg';
   static const String notificationIcon = '$baseurl/notification_icon.svg';
   static const String editIcon = '$baseurl/edit_icon.svg';
+  static const String walletIcon = '$baseurl/wallet_icon.svg';
+  static const String boxOrderIcon = '$baseurl/box_order_icon.svg';
 }

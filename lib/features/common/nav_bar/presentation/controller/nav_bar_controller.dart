@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../services/storage/storage_services.dart';
-import '../../../../marchant/dashboard/presentation/screen/merchant_dashboard_screen.dart';
-import '../../../../marchant/drivers/presentation/screen/merchant_drivers_screen.dart';
-import '../../../../marchant/menu/presentation/screen/merchant_menu_screen.dart';
-import '../../../../marchant/orders/presentation/screen/merchant_orders_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/dashboard/presentation/screen/merchant_dashboard_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/drivers/presentation/screen/merchant_drivers_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/menu/presentation/screen/merchant_menu_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/orders/presentation/screen/merchant_orders_screen.dart';
 import '../../../../profile/presentation/screen/profile_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/dashboard/presentation/screen/driver_dashboard_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/orders/presentation/screen/driver_orders_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/earnings/presentation/screen/driver_earnings_screen.dart';
+import 'package:flutter_code_structure/features/role/driver/profile/presentation/screen/driver_profile_screen.dart';
 import '../../../../../utils/constants/app_icons.dart';
 
 class NavItemData {
@@ -63,7 +67,8 @@ class NavBarController extends GetxController {
     } else if (isDriver) {
       return const [
         NavItemData(label: 'Dashboard', iconPath: AppIcons.homeIcon),
-        NavItemData(label: 'Orders', iconPath: AppIcons.orderIcon),
+        NavItemData(label: 'Orders', iconPath: AppIcons.boxOrderIcon),
+        NavItemData(label: 'Earnings', iconPath: AppIcons.walletIcon),
         NavItemData(label: 'Profile', iconPath: AppIcons.profileIcon),
       ];
     } else {
@@ -86,9 +91,10 @@ class NavBarController extends GetxController {
       ];
     } else if (isDriver) {
       return const [
-        MerchantDashboardScreen(),
-        MerchantOrdersScreen(),
-        ProfileScreen(),
+        DriverDashboardScreen(),
+        DriverOrdersScreen(),
+        DriverEarningsScreen(),
+        DriverProfileScreen(),
       ];
     } else {
       return const [

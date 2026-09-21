@@ -54,6 +54,7 @@ dependencies:
   flutter_dotenv: ^6.0.0
   dio_cookie_manager: ^3.3.0
   cookie_jar: ^4.0.8
+  permission_handler: ^13.0.2
 
 dev_dependencies:
   flutter_test:

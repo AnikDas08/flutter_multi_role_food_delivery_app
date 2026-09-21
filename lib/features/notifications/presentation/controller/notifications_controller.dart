@@ -25,7 +25,7 @@ class NotificationsController extends GetxController {
   void onInit() {
     super.onInit();
     scrollController.addListener(_onScroll);
-    getNotifications();
+    //getNotifications();
   }
 
   /// Scroll listener

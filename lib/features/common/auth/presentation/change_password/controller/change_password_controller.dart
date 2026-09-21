@@ -53,9 +53,4 @@ class ChangePasswordController extends GetxController {
       update();
     }
   }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

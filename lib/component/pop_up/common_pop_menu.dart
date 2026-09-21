@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../../utils/app_snackbar.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_string.dart';
 import '../../services/storage/storage_services.dart';
@@ -91,60 +93,148 @@ class PopUpMenu extends StatelessWidget {
   }
 }
 
-void logOutPopUp() {
-  showDialog(
-    context: Get.context!,
-    builder: (context) {
-      // Controller for the animation
-      return AnimationPopUp(
-        child: AnimatedBuilder(
-          animation: CurvedAnimation(
-            parent: ModalRoute.of(context)!.animation!,
-            curve: Curves.easeIn,
-          ),
-          builder: (context, child) {
-            return FadeTransition(
-              opacity: ModalRoute.of(context)!.animation!,
-              child: AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                contentPadding: EdgeInsets.all(12.sp),
-                title: const CommonText(
-                  text: AppString.youSureWantToLogout,
-                  maxLines: 2,
-                  fontWeight: FontWeight.w600,
-                ),
-                actions: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CommonButton(
-                          titleText: AppString.no,
-                          borderWidth: 1.5,
-                          buttonColor: AppColors.transparent,
-                          titleColor: AppColors.primaryColor,
-                          onTap: () => Get.back(),
-                        ),
-                      ),
-                      SizedBox(width: 16.w),
-                      Expanded(
-                        child: CommonButton(
-                          titleText: AppString.yes,
-                          onTap: () {
-                            //LocalStorage.logout();
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
+void logOutPopUp({VoidCallback? onConfirm}) {
+  Get.dialog(
+    Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 24.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 24,
+              offset: const Offset(0, 8),
+            ),
+          ],
         ),
-      );
-    },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            /// Soft Red Icon Header
+            Container(
+              width: 60.w,
+              height: 60.w,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color(0xFFFEE2E2),
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.logout_rounded,
+                  color: const Color(0xFFEF4444),
+                  size: 28.sp,
+                ),
+              ),
+            ),
+
+            SizedBox(height: 18.h),
+
+            /// Title
+            Text(
+              'Log Out',
+              style: GoogleFonts.roboto(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF1E293B),
+              ),
+            ),
+
+            SizedBox(height: 8.h),
+
+            /// Subtitle
+            Text(
+              'Are you sure you want to log out?\nYou will need to sign in again to access your account.',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.roboto(
+                fontSize: 13.5.sp,
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFF64748B),
+                height: 1.45,
+              ),
+            ),
+
+            SizedBox(height: 24.h),
+
+            /// Actions Row: Cancel & Log Out
+            Row(
+              children: [
+                /// Cancel Button
+                Expanded(
+                  child: SizedBox(
+                    height: 46.h,
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: Color(0xFFE2E8F0),
+                          width: 1.2,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24.r),
+                        ),
+                        backgroundColor: Colors.white,
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        'Cancel',
+                        style: GoogleFonts.roboto(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF64748B),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(width: 12.w),
+
+                /// Confirm Log Out Button
+                Expanded(
+                  child: SizedBox(
+                    height: 46.h,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        Get.back();
+                        if (onConfirm != null) {
+                          onConfirm();
+                        } else {
+                          await LocalStorage.removeAllPrefData();
+                          AppSnackbar.success(
+                            title: 'Logged Out',
+                            message: 'You have been logged out successfully.',
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFEF4444),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24.r),
+                        ),
+                      ),
+                      child: Text(
+                        'Log Out',
+                        style: GoogleFonts.roboto(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ),
+    barrierDismissible: true,
   );
 }
 
