@@ -80,18 +80,27 @@ class MainNavBarScreen extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SvgPicture.asset(
-                            item.iconPath,
-                            width: 25.w,
-                            height: 25.h,
-                            fit: BoxFit.contain,
-                            colorFilter: ColorFilter.mode(
-                              isSelected
+                          if (item.iconPath != null)
+                            SvgPicture.asset(
+                              item.iconPath!,
+                              width: 24.w,
+                              height: 24.h,
+                              fit: BoxFit.contain,
+                              colorFilter: ColorFilter.mode(
+                                isSelected
+                                    ? const Color(0xFF341280)
+                                    : const Color(0xFF6B7280),
+                                BlendMode.srcIn,
+                              ),
+                            )
+                          else if (item.iconData != null)
+                            Icon(
+                              item.iconData!,
+                              size: 24.sp,
+                              color: isSelected
                                   ? const Color(0xFF341280)
                                   : const Color(0xFF6B7280),
-                              BlendMode.srcIn,
                             ),
-                          ),
                           SizedBox(height: 5.h),
                           FittedBox(
                             fit: BoxFit.scaleDown,

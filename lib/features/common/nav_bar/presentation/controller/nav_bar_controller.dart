@@ -12,13 +12,20 @@ import 'package:flutter_code_structure/features/role/driver/earnings/presentatio
 import 'package:flutter_code_structure/features/role/driver/profile/presentation/screen/driver_profile_screen.dart';
 import '../../../../../utils/constants/app_icons.dart';
 
+import 'package:flutter_code_structure/features/role/customer/cart/presentation/screen/customer_cart_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/customer_dashboard_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/orders/presentation/screen/customer_orders_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/wallet/presentation/screen/customer_wallet_screen.dart';
+
 class NavItemData {
   final String label;
-  final String iconPath;
+  final String? iconPath;
+  final IconData? iconData;
 
   const NavItemData({
     required this.label,
-    required this.iconPath,
+    this.iconPath,
+    this.iconData,
   });
 }
 
@@ -74,7 +81,9 @@ class NavBarController extends GetxController {
     } else {
       return const [
         NavItemData(label: 'Home', iconPath: AppIcons.homeIcon),
-        NavItemData(label: 'Orders', iconPath: AppIcons.orderIcon),
+        NavItemData(label: 'Wallet', iconPath: AppIcons.walletIcon),
+        NavItemData(label: 'Orders', iconPath: AppIcons.boxOrderIcon),
+        NavItemData(label: 'My Cart', iconData: Icons.shopping_cart_outlined),
         NavItemData(label: 'Profile', iconPath: AppIcons.profileIcon),
       ];
     }
@@ -98,8 +107,10 @@ class NavBarController extends GetxController {
       ];
     } else {
       return const [
-        MerchantDashboardScreen(),
-        MerchantOrdersScreen(),
+        CustomerDashboardScreen(),
+        CustomerWalletScreen(),
+        CustomerOrdersScreen(),
+        CustomerCartScreen(),
         ProfileScreen(),
       ];
     }

@@ -12,5 +12,12 @@ class AppImages {
 
   static const String noData = '$baseurl/noData.png';
   static const String noImage = '$baseurl/noImage.png';
-  static const String profile = '$baseurl/profile.png';
+  static const String profile = '$baseurl/profile_image.jpg';
+  static const String profileImage = '$baseurl/profile_image.jpg';
+  static const String beefPizza = '$baseurl/beef_pizza.png';
+  static const String chezBurgers = '$baseurl/chez_burgers.png';
+  static const String plomobites = '$baseurl/plomobits_image.png';
+  static const String plomoshop = '$baseurl/plomoshop_image.png';
+  static const String plomobitsImage = '$baseurl/plomobits_image.png';
+  static const String plomoshopImage = '$baseurl/plomoshop_image.png';
 }

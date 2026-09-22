@@ -38,10 +38,23 @@ import 'package:flutter_code_structure/features/role/driver/profile/presentation
 import 'package:flutter_code_structure/features/role/driver/profile/presentation/screen/driver_linked_accounts_screen.dart';
 import 'package:flutter_code_structure/features/role/driver/profile/presentation/screen/add_bank_account_screen.dart';
 import 'package:flutter_code_structure/features/role/driver/profile/presentation/screen/account_verification_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/customer_dashboard_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/wallet/presentation/screen/customer_wallet_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/orders/presentation/screen/customer_orders_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/cart/presentation/screen/customer_cart_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/popular_items_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/popular_restaurants_screen.dart';
 
 class AppRoutes {
   static const String test = '/test_screen.dart';
   static const String splash = '/';
+  static const String customerDashboard = '/customer_dashboard_screen.dart';
+  static const String customerWallet = '/customer_wallet_screen.dart';
+  static const String customerOrders = '/customer_orders_screen.dart';
+  static const String customerCart = '/customer_cart_screen.dart';
+  static const String popularItems = '/popular_items_screen.dart';
+  static const String popularRestaurants = '/popular_restaurants_screen.dart';
+  static const String popularShops = '/popular_shops_screen.dart';
   static const String onboarding = '/onboarding_screen.dart';
   static const String roleSelection = '/role_selection_screen.dart';
   static const String mainNavBar = '/main_nav_bar_screen.dart';
@@ -122,5 +135,12 @@ class AppRoutes {
     GetPage(name: driverLinkedAccounts, page: () => const DriverLinkedAccountsScreen()),
     GetPage(name: addBankAccount, page: () => const AddBankAccountScreen()),
     GetPage(name: accountVerification, page: () => const AccountVerificationScreen()),
+    GetPage(name: customerDashboard, page: () => const CustomerDashboardScreen()),
+    GetPage(name: customerWallet, page: () => const CustomerWalletScreen()),
+    GetPage(name: customerOrders, page: () => const CustomerOrdersScreen()),
+    GetPage(name: customerCart, page: () => const CustomerCartScreen()),
+    GetPage(name: popularItems, page: () => const PopularItemsScreen()),
+    GetPage(name: popularRestaurants, page: () => const PopularRestaurantsScreen(title: 'Popular Restaurants', isShop: false)),
+    GetPage(name: popularShops, page: () => const PopularRestaurantsScreen(title: 'PlomoShop', isShop: true)),
   ];
 }

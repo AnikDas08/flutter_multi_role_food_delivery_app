@@ -109,8 +109,9 @@ class CommonTextField extends StatelessWidget {
           hintText: hintText,
           labelText: labelText,
           hintStyle: GoogleFonts.roboto(fontSize: 14, color: hintTextColor),
-          labelStyle: GoogleFonts.roboto(fontSize: 14, color: labelTextColor),
-          prefix: CommonText(text: prefixText ?? '', fontWeight: .w400),
+          prefix: (prefixText != null && prefixText!.isNotEmpty)
+              ? CommonText(text: prefixText!, fontWeight: .w400)
+              : null,
           suffixIcon: isPassword ? _buildPasswordSuffixIcon() : suffixIcon,
         ),
       ),

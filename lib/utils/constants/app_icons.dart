@@ -15,4 +15,8 @@ class AppIcons {
   static const String editIcon = '$baseurl/edit_icon.svg';
   static const String walletIcon = '$baseurl/wallet_icon.svg';
   static const String boxOrderIcon = '$baseurl/box_order_icon.svg';
+  static const String plomobites = '$baseurl/plomobites_icon.svg';
+  static const String plomoshop = '$baseurl/plomoshop_icon.svg';
+  static const String plomobitesIcon = '$baseurl/plomobites_icon.svg';
+  static const String plomoshopIcon = '$baseurl/plomoshop_icon.svg';
 }
