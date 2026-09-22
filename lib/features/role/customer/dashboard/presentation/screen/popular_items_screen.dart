@@ -8,7 +8,12 @@ import '../controller/customer_dashboard_controller.dart';
 import '../widgets/popular_item_card.dart';
 
 class PopularItemsScreen extends StatefulWidget {
-  const PopularItemsScreen({super.key});
+  final String? title;
+
+  const PopularItemsScreen({
+    super.key,
+    this.title,
+  });
 
   @override
   State<PopularItemsScreen> createState() => _PopularItemsScreenState();
@@ -18,6 +23,9 @@ class _PopularItemsScreenState extends State<PopularItemsScreen> {
   final CustomerDashboardController controller =
       Get.find<CustomerDashboardController>();
 
+  late String _screenTitle;
+  final TextEditingController _searchController = TextEditingController();
+  final RxString _searchQuery = ''.obs;
   final RxString selectedFilter = 'All'.obs;
 
   final List<Map<String, String>> filters = [
@@ -32,7 +40,28 @@ class _PopularItemsScreenState extends State<PopularItemsScreen> {
   @override
   void initState() {
     super.initState();
+    final dynamic args = Get.arguments;
+    if (widget.title != null) {
+      _screenTitle = widget.title!;
+    } else if (args is Map && args['title'] != null) {
+      _screenTitle = args['title'] as String;
+    } else if (args is String && args.isNotEmpty) {
+      _screenTitle = args;
+    } else {
+      _screenTitle = 'Popular Items';
+    }
+
     allItems = [
+      const CustomerPopularItem(
+        id: 'item_burger_hawaiian',
+        title: 'Beef Hawaiian Burger',
+        rating: 5.0,
+        distanceTime: '1.2 km - 20 min',
+        description:
+            'Juicy, flame-grilled beef patty stacked with sweet grilled pineapple, melted cheddar cheese, and crispy bacon...',
+        price: 12.99,
+        imageUrl: AppImages.chezBurgers,
+      ),
       const CustomerPopularItem(
         id: 'item_pizza_1',
         title: 'Beef Pizza',
@@ -116,24 +145,37 @@ class _PopularItemsScreenState extends State<PopularItemsScreen> {
     ];
   }
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   List<CustomerPopularItem> _getFilteredItems() {
+    List<CustomerPopularItem> list = allItems;
     final filter = selectedFilter.value;
-    if (filter == 'All') return allItems;
     if (filter == 'Hamburger') {
-      return allItems.where((i) => i.title.toLowerCase().contains('burger')).toList();
-    }
-    if (filter == 'Pizza') {
-      return allItems.where((i) => i.title.toLowerCase().contains('pizza')).toList();
-    }
-    if (filter == 'Drink') {
-      return allItems
+      list = list.where((i) => i.title.toLowerCase().contains('burger')).toList();
+    } else if (filter == 'Pizza') {
+      list = list.where((i) => i.title.toLowerCase().contains('pizza')).toList();
+    } else if (filter == 'Drink') {
+      list = list
           .where((i) =>
               i.title.toLowerCase().contains('juice') ||
               i.title.toLowerCase().contains('smoothie') ||
               i.title.toLowerCase().contains('drink'))
           .toList();
     }
-    return allItems;
+
+    final query = _searchQuery.value.trim().toLowerCase();
+    if (query.isNotEmpty) {
+      list = list
+          .where((i) =>
+              i.title.toLowerCase().contains(query) ||
+              i.description.toLowerCase().contains(query))
+          .toList();
+    }
+    return list;
   }
 
   @override
@@ -148,7 +190,12 @@ class _PopularItemsScreenState extends State<PopularItemsScreen> {
             /// Top Bar
             _buildAppBar(),
 
-            SizedBox(height: 16.h),
+            SizedBox(height: 12.h),
+
+            /// Search Bar
+            _buildSearchBar(),
+
+            SizedBox(height: 12.h),
 
             /// Filter Chips Row
             _buildFilterChips(),
@@ -159,6 +206,30 @@ class _PopularItemsScreenState extends State<PopularItemsScreen> {
             Expanded(
               child: Obx(() {
                 final items = _getFilteredItems();
+                if (items.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.search_off_rounded,
+                          size: 54.sp,
+                          color: const Color(0xFFCBD5E1),
+                        ),
+                        SizedBox(height: 10.h),
+                        Text(
+                          'No items found',
+                          style: GoogleFonts.roboto(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF64748B),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
                 return GridView.builder(
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -179,6 +250,76 @@ class _PopularItemsScreenState extends State<PopularItemsScreen> {
                   },
                 );
               }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Search Bar
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: Container(
+        height: 44.h,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24.r),
+          border: Border.all(color: const Color(0xFFE2E8F0), width: 1.2),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 14.w),
+        child: Row(
+          children: [
+            Icon(
+              Icons.search,
+              color: const Color(0xFF94A3B8),
+              size: 20.sp,
+            ),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: TextField(
+                controller: _searchController,
+                onChanged: (val) => _searchQuery.value = val,
+                style: GoogleFonts.roboto(
+                  fontSize: 13.5.sp,
+                  color: const Color(0xFF2E0A66),
+                  fontWeight: FontWeight.w500,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Search food or dishes...',
+                  hintStyle: GoogleFonts.roboto(
+                    fontSize: 13.5.sp,
+                    color: const Color(0xFF94A3B8),
+                    fontWeight: FontWeight.w400,
+                  ),
+                  border: InputBorder.none,
+                  isDense: true,
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+            ),
+            Obx(
+              () => _searchQuery.value.isNotEmpty
+                  ? GestureDetector(
+                      onTap: () {
+                        _searchController.clear();
+                        _searchQuery.value = '';
+                      },
+                      child: Icon(
+                        Icons.close,
+                        size: 18.sp,
+                        color: const Color(0xFF94A3B8),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
             ),
           ],
         ),
@@ -223,7 +364,7 @@ class _PopularItemsScreenState extends State<PopularItemsScreen> {
           Expanded(
             child: Center(
               child: Text(
-                'Popular Items',
+                _screenTitle,
                 style: GoogleFonts.roboto(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w700,

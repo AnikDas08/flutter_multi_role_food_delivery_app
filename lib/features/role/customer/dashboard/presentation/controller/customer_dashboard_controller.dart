@@ -10,6 +10,9 @@ class CustomerPopularItem {
   final String description;
   final double price;
   final String imageUrl;
+  final String restaurantName;
+  final String reviewCount;
+  final String? fullDescription;
 
   const CustomerPopularItem({
     required this.id,
@@ -19,6 +22,9 @@ class CustomerPopularItem {
     required this.description,
     required this.price,
     required this.imageUrl,
+    this.restaurantName = 'Burger King',
+    this.reviewCount = '4.8k reviews',
+    this.fullDescription,
   });
 }
 
@@ -93,21 +99,29 @@ class CustomerDashboardController extends GetxController {
   final RxList<CustomerPopularItem> popularItems = <CustomerPopularItem>[
     const CustomerPopularItem(
       id: 'item_1',
-      title: 'Beef Pizza',
-      rating: 4.6,
-      distanceTime: '1.3 km - 30 min',
-      description: 'A hearty, meaty delight loaded with flavor crust topped with rich cheese...',
+      title: 'Beef Hawaiian Burger',
+      rating: 5.0,
+      distanceTime: '1.2 km - 20 min',
+      description:
+          'Juicy, flame-grilled beef patty stacked with sweet grilled pineapple, melted cheddar cheese, and crispy bacon...',
       price: 12.99,
-      imageUrl: AppImages.beefPizza,
+      imageUrl: AppImages.chezBurgers,
+      restaurantName: 'Burger King',
+      reviewCount: '4.8k reviews',
+      fullDescription:
+          'Juicy, flame-grilled beef patty stacked with sweet grilled pineapple, melted cheddar cheese, and crispy bacon, all topped with fresh lettuce, tomato, and a tangy teriyaki glaze. Served on a toasted brioche bun for the perfect sweet-and-savory bite.',
     ),
     const CustomerPopularItem(
       id: 'item_2',
       title: 'Beef Pizza',
       rating: 4.6,
       distanceTime: '1.3 km - 30 min',
-      description: 'A hearty, meaty delight loaded with flavor crust topped with rich cheese...',
+      description:
+          'A hearty, meaty delight loaded with flavor crust topped with rich cheese...',
       price: 12.99,
       imageUrl: AppImages.beefPizza,
+      restaurantName: 'Chez Panisse Cafe',
+      reviewCount: '3.2k reviews',
     ),
     const CustomerPopularItem(
       id: 'item_3',

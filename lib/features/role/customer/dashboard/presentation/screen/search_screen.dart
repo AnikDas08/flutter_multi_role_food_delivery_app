@@ -33,6 +33,16 @@ class _SearchScreenState extends State<SearchScreen>
   final RxList<String> _recentSearches =
       <String>['Italian Pizza', 'Italian Pizza', 'Italian Pizza', 'Italian Pizza', 'Italian Pizza', 'Italian Pizza'].obs;
 
+  // ── Filter state ──────────────────────────────────────────────────────────
+  final RxString _filterPrice = ''.obs;       // 'Low Price' | 'High Price' | 'Most Popular'
+  final RxString _filterTime = ''.obs;        // '15 min' | '20 min' | '30 min' | '45 min' | '60 min'
+  final RxInt _filterRating = 0.obs;          // 1-5, 0 = no filter
+
+  bool get _hasActiveFilter =>
+      _filterPrice.value.isNotEmpty ||
+      _filterTime.value.isNotEmpty ||
+      _filterRating.value > 0;
+
   late final AnimationController _pulseController;
   late final Animation<double> _pulseAnimation;
 
@@ -76,40 +86,57 @@ class _SearchScreenState extends State<SearchScreen>
           _isListening.value = false;
         }
       },
+      debugLogging: false,
     );
     _speechAvailable.value = available;
   }
 
-  /// Called for every speech result (partial + final)
+  /// Fires for every partial + final speech recognition result
   void _onSpeechResult(SpeechRecognitionResult result) {
     final words = result.recognizedWords;
-    // Use TextEditingValue so cursor is placed at the end of the recognised text
+    if (words.isEmpty) return;
+    // Update the text field with cursor at the end
     _searchController.value = TextEditingValue(
       text: words,
       selection: TextSelection.collapsed(offset: words.length),
     );
-    // Update the reactive query so Obx rebuilds the results grid
+    // Drive the reactive results grid
     _searchQuery.value = words;
     if (result.finalResult) {
       _isListening.value = false;
-      if (words.trim().isNotEmpty) _addToRecent(words.trim());
+      _addToRecent(words.trim());
     }
   }
 
   void _startListening() async {
-    // Re-initialise if not yet available (e.g. first tap before init completes)
+    // Re-init if not yet available
     if (!_speechAvailable.value) {
       await _initSpeech();
-      if (!_speechAvailable.value) return; // device doesn't support STT
+    }
+    if (!_speechAvailable.value) {
+      Get.snackbar(
+        'Voice not available',
+        'Speech recognition is not supported or permitted on this device.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
     }
     _isListening.value = true;
-    // partialResults defaults to true in speech_to_text — no extra options needed
-    await _speechToText.listen(
+    // Must explicitly set partialResults:true — the package's internal flag
+    // defaults to false and only fires callback on final result otherwise.
+    final started = await _speechToText.listen(
       onResult: _onSpeechResult,
-      listenFor: const Duration(seconds: 10),
-      pauseFor: const Duration(seconds: 3),
-      cancelOnError: false,
+      listenOptions: SpeechListenOptions(
+        partialResults: true,        // fire callback word-by-word as you speak
+        cancelOnError: false,
+        listenMode: ListenMode.search, // optimised for search terms
+        listenFor: const Duration(seconds: 10),
+        pauseFor: const Duration(seconds: 3),
+      ),
     );
+    if (!started) {
+      _isListening.value = false;
+    }
   }
 
   void _stopListening() async {
@@ -159,11 +186,29 @@ class _SearchScreenState extends State<SearchScreen>
   List<CustomerPopularItem> get _filteredItems {
     final q = _searchQuery.value.trim().toLowerCase();
     if (q.isEmpty) return [];
-    return _allItems
+    var results = _allItems
         .where((item) =>
             item.title.toLowerCase().contains(q) ||
             item.description.toLowerCase().contains(q))
         .toList();
+
+    // ── Apply price sort ─────────────────────────────────────────────────
+    final price = _filterPrice.value;
+    if (price == 'Low Price') {
+      results.sort((a, b) => a.price.compareTo(b.price));
+    } else if (price == 'High Price') {
+      results.sort((a, b) => b.price.compareTo(a.price));
+    } else if (price == 'Most Popular') {
+      results.sort((a, b) => b.rating.compareTo(a.rating));
+    }
+
+    // ── Apply rating filter ───────────────────────────────────────────────
+    final minRating = _filterRating.value;
+    if (minRating > 0) {
+      results = results.where((item) => item.rating >= minRating).toList();
+    }
+
+    return results;
   }
 
   @override
@@ -615,19 +660,248 @@ class _SearchScreenState extends State<SearchScreen>
   // Filter Icon Button
   // ─────────────────────────────────────────────────────────────────────────
   Widget _buildFilterIcon() {
-    return Container(
-      width: 36.w,
-      height: 36.w,
-      decoration: BoxDecoration(
-        color: const Color(0xFF7C3AED),
-        borderRadius: BorderRadius.circular(10.r),
+    return Obx(() {
+      final active = _hasActiveFilter;
+      return GestureDetector(
+        onTap: _showFilterSheet,
+        child: Container(
+          width: 36.w,
+          height: 36.w,
+          decoration: BoxDecoration(
+            color: active ? const Color(0xFF2E0A66) : const Color(0xFF7C3AED),
+            borderRadius: BorderRadius.circular(10.r),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF7C3AED).withValues(alpha: active ? 0.5 : 0.25),
+                blurRadius: active ? 10 : 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          alignment: Alignment.center,
+          child: Icon(
+            active ? Icons.filter_alt_rounded : Icons.tune_rounded,
+            size: 18.sp,
+            color: Colors.white,
+          ),
+        ),
+      );
+    });
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Filter Bottom Sheet
+  // ─────────────────────────────────────────────────────────────────────────
+  void _showFilterSheet() {
+    // Temporary local copies so user can cancel without applying
+    final tempPrice = _filterPrice.value.obs;
+    final tempTime = _filterTime.value.obs;
+    final tempRating = _filterRating.value.obs;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return SafeArea(
+          top: false, // only bottom safe area matters for a bottom sheet
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+            ),
+            padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 16.h),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // ── Handle bar
+                  Center(
+                    child: Container(
+                      width: 40.w,
+                      height: 4.h,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE2E8F0),
+                        borderRadius: BorderRadius.circular(2.r),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+
+                  // ── Title row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Filter',
+                        style: GoogleFonts.roboto(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF2E0A66),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          tempPrice.value = '';
+                          tempTime.value = '';
+                          tempRating.value = 0;
+                        },
+                        child: Text(
+                          'Reset',
+                          style: GoogleFonts.roboto(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFF7C3AED),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 20.h),
+
+                  // ── Section 1: Price
+                  _filterSectionTitle('Price'),
+                  SizedBox(height: 10.h),
+                  Obx(() => _radioGroup<String>(
+                        items: const ['Low Price', 'High Price', 'Most Popular'],
+                        selected: tempPrice.value,
+                        label: (v) => v,
+                        onChanged: (v) => tempPrice.value = v == tempPrice.value ? '' : v,
+                      )),
+
+                  SizedBox(height: 18.h),
+
+                  // ── Section 2: Cooking Time
+                  _filterSectionTitle('Cooking Time'),
+                  SizedBox(height: 10.h),
+                  Obx(() => _radioGroup<String>(
+                        items: const ['15 min', '20 min', '30 min', '45 min', '60 min'],
+                        selected: tempTime.value,
+                        label: (v) => v,
+                        onChanged: (v) => tempTime.value = v == tempTime.value ? '' : v,
+                      )),
+
+                  SizedBox(height: 18.h),
+
+                  // ── Section 3: Rating Star
+                  _filterSectionTitle('Rating Star'),
+                  SizedBox(height: 10.h),
+                  Obx(() => _radioGroup<int>(
+                        items: const [1, 2, 3, 4, 5],
+                        selected: tempRating.value,
+                        label: (v) => '$v star',
+                        onChanged: (v) => tempRating.value = v == tempRating.value ? 0 : v,
+                      )),
+
+                  SizedBox(height: 24.h),
+
+                  // ── Apply Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50.h,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _filterPrice.value = tempPrice.value;
+                        _filterTime.value = tempTime.value;
+                        _filterRating.value = tempRating.value;
+                        Get.back();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF7C3AED),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.r),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        'Apply Filter',
+                        style: GoogleFonts.roboto(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),       // Container
+        );         // SafeArea
+      },
+    );
+  }
+
+  Widget _filterSectionTitle(String title) {
+    return Text(
+      title,
+      style: GoogleFonts.roboto(
+        fontSize: 14.sp,
+        fontWeight: FontWeight.w700,
+        color: const Color(0xFF1E293B),
       ),
-      alignment: Alignment.center,
-      child: Icon(
-        Icons.tune_rounded,
-        size: 18.sp,
-        color: Colors.white,
-      ),
+    );
+  }
+
+  Widget _radioGroup<T>({
+    required List<T> items,
+    required T selected,
+    required String Function(T) label,
+    required void Function(T) onChanged,
+  }) {
+    return Column(
+      children: items.map((item) {
+        final isSelected = item == selected;
+        return GestureDetector(
+          onTap: () => onChanged(item),
+          behavior: HitTestBehavior.opaque,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 7.h),
+            child: Row(
+              children: [
+                // Custom radio circle
+                Container(
+                  width: 20.w,
+                  height: 20.w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isSelected
+                          ? const Color(0xFF7C3AED)
+                          : const Color(0xFFCBD5E1),
+                      width: isSelected ? 1.5 : 1.5,
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: isSelected
+                      ? Container(
+                          width: 11.w,
+                          height: 11.w,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xFF7C3AED),
+                          ),
+                        )
+                      : null,
+                ),
+                SizedBox(width: 12.w),
+                Text(
+                  label(item),
+                  style: GoogleFonts.roboto(
+                    fontSize: 13.5.sp,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                    color: isSelected
+                        ? const Color(0xFF2E0A66)
+                        : const Color(0xFF64748B),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }

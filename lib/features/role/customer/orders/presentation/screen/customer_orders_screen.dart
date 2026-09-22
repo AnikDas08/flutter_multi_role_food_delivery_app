@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:flutter_code_structure/features/common/nav_bar/presentation/controller/nav_bar_controller.dart';
 import 'package:flutter_code_structure/utils/app_snackbar.dart';
+import 'package:flutter_code_structure/utils/constants/app_images.dart';
 
 class CustomerOrdersScreen extends StatefulWidget {
   const CustomerOrdersScreen({super.key});
@@ -14,73 +17,114 @@ class CustomerOrdersScreen extends StatefulWidget {
 class _CustomerOrdersScreenState extends State<CustomerOrdersScreen> {
   int _selectedTabIndex = 0;
 
-  final List<Map<String, dynamic>> _activeOrders = [
+  /// Active orders: empty by default so it displays the empty state illustration as requested
+  final List<Map<String, dynamic>> _activeOrders = [];
+
+  /// Completed orders matching the mockup (with "Reorder" button & date)
+  final List<Map<String, dynamic>> _completedOrders = [
     {
-      'id': 'ORD-9821',
       'restaurant': 'Chez Panisse Cafe',
-      'imageUrl':
-          'https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&q=80',
-      'items': '2x Beef Pizza, 1x Coke (500ml)',
-      'total': '\$28.50',
-      'status': 'On the way',
-      'statusColor': const Color(0xFF2563EB),
-      'statusBg': const Color(0xFFEFF6FF),
-      'estimatedTime': '15-20 min',
-      'date': 'Today, 1:45 PM',
+      'orderId': 'Order#0394',
+      'rating': '4.8',
+      'description':
+          'A hearty, meaty delight loaded with flavor meaty delight loaded...',
+      'price': '\$12.99',
+      'date': '19 Mar 2026',
+      'imageUrl': AppImages.chezBurgers,
     },
     {
-      'id': 'ORD-9815',
-      'restaurant': 'Wanderlust Bazaar',
-      'imageUrl':
-          'https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&q=80',
-      'items': 'Fresh Organic Veggie Basket, 2L Milk',
-      'total': '\$16.20',
-      'status': 'Preparing',
-      'statusColor': const Color(0xFFD97706),
-      'statusBg': const Color(0xFFFFFBEB),
-      'estimatedTime': '30-40 min',
-      'date': 'Today, 12:30 PM',
+      'restaurant': 'Chez Panisse Cafe',
+      'orderId': 'Order#0394',
+      'rating': '4.8',
+      'description':
+          'A hearty, meaty delight loaded with flavor meaty delight loaded...',
+      'price': '\$12.99',
+      'date': '19 Mar 2026',
+      'imageUrl': AppImages.chezBurgers,
+    },
+    {
+      'restaurant': 'Chez Panisse Cafe',
+      'orderId': 'Order#0394',
+      'rating': '4.8',
+      'description':
+          'A hearty, meaty delight loaded with flavor meaty delight loaded...',
+      'price': '\$12.99',
+      'date': '19 Mar 2026',
+      'imageUrl': AppImages.chezBurgers,
+    },
+    {
+      'restaurant': 'Chez Panisse Cafe',
+      'orderId': 'Order#0394',
+      'rating': '4.8',
+      'description':
+          'A hearty, meaty delight loaded with flavor meaty delight loaded...',
+      'price': '\$12.99',
+      'date': '19 Mar 2026',
+      'imageUrl': AppImages.chezBurgers,
     },
   ];
 
-  final List<Map<String, dynamic>> _pastOrders = [
+  /// Cancelled orders matching the mockup (with pizza image & "Cancelled" outline badge)
+  final List<Map<String, dynamic>> _cancelledOrders = [
     {
-      'id': 'ORD-9742',
       'restaurant': 'Chez Panisse Cafe',
-      'imageUrl':
-          'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80',
-      'items': '1x Beef Pizza, 1x Garlic Bread',
-      'total': '\$19.99',
-      'status': 'Delivered',
-      'statusColor': const Color(0xFF16A34A),
-      'statusBg': const Color(0xFFF0FDF4),
-      'date': '21 Sep 2026, 8:15 PM',
+      'rating': '4.8',
+      'description':
+          'A hearty, meaty delight loaded with flavor meaty delight loaded...',
+      'price': '\$12.99',
+      'imageUrl': AppImages.beefPizza,
     },
     {
-      'id': 'ORD-9610',
-      'restaurant': 'Grill & Chill Diner',
-      'imageUrl':
-          'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80',
-      'items': '2x Smoked Beef Burger, French Fries',
-      'total': '\$24.00',
-      'status': 'Delivered',
-      'statusColor': const Color(0xFF16A34A),
-      'statusBg': const Color(0xFFF0FDF4),
-      'date': '19 Sep 2026, 7:00 PM',
+      'restaurant': 'Chez Panisse Cafe',
+      'rating': '4.8',
+      'description':
+          'A hearty, meaty delight loaded with flavor meaty delight loaded...',
+      'price': '\$12.99',
+      'imageUrl': AppImages.beefPizza,
     },
     {
-      'id': 'ORD-9502',
-      'restaurant': 'Daily Shop',
-      'imageUrl':
-          'https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=600&q=80',
-      'items': 'Grocery Essentials Pack',
-      'total': '\$32.50',
-      'status': 'Delivered',
-      'statusColor': const Color(0xFF16A34A),
-      'statusBg': const Color(0xFFF0FDF4),
-      'date': '16 Sep 2026, 11:20 AM',
+      'restaurant': 'Chez Panisse Cafe',
+      'rating': '4.8',
+      'description':
+          'A hearty, meaty delight loaded with flavor meaty delight loaded...',
+      'price': '\$12.99',
+      'imageUrl': AppImages.beefPizza,
+    },
+    {
+      'restaurant': 'Chez Panisse Cafe',
+      'rating': '4.8',
+      'description':
+          'A hearty, meaty delight loaded with flavor meaty delight loaded...',
+      'price': '\$12.99',
+      'imageUrl': AppImages.beefPizza,
     },
   ];
+
+  List<Map<String, dynamic>> get _currentOrders {
+    switch (_selectedTabIndex) {
+      case 0:
+        return _activeOrders;
+      case 1:
+        return _completedOrders;
+      case 2:
+        return _cancelledOrders;
+      default:
+        return _activeOrders;
+    }
+  }
+
+  void _onBackPress() {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    } else {
+      try {
+        final navCtrl = Get.find<NavBarController>();
+        navCtrl.changeIndex(0);
+      } catch (_) {
+        Get.back();
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,98 +132,66 @@ class _CustomerOrdersScreenState extends State<CustomerOrdersScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// Top Bar
+            /// 1. Top Bar: Back button on left, "Orders" title centered, NO notification icon
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-              child: Text(
-                'My Orders',
-                style: GoogleFonts.roboto(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF2E0A66),
-                ),
-              ),
-            ),
-
-            /// Tab bar
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 20.w),
-              padding: EdgeInsets.all(4.r),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFC),
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => setState(() => _selectedTabIndex = 0),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 8.h),
-                        decoration: BoxDecoration(
-                          color: _selectedTabIndex == 0
-                              ? const Color(0xFF4C1D95)
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(10.r),
+                  /// Back Button (circular outline)
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: _onBackPress,
+                    child: Container(
+                      width: 42.w,
+                      height: 42.w,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                        border: Border.all(
+                          color: const Color(0xFFE2E8F0),
+                          width: 1.2,
                         ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Active Orders',
-                          style: GoogleFonts.roboto(
-                            fontSize: 13.sp,
-                            fontWeight: _selectedTabIndex == 0
-                                ? FontWeight.w600
-                                : FontWeight.w500,
-                            color: _selectedTabIndex == 0
-                                ? Colors.white
-                                : const Color(0xFF64748B),
-                          ),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          size: 16.sp,
+                          color: const Color(0xFF2E0A66),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(width: 4.w),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => setState(() => _selectedTabIndex = 1),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 8.h),
-                        decoration: BoxDecoration(
-                          color: _selectedTabIndex == 1
-                              ? const Color(0xFF4C1D95)
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Past Orders',
-                          style: GoogleFonts.roboto(
-                            fontSize: 13.sp,
-                            fontWeight: _selectedTabIndex == 1
-                                ? FontWeight.w600
-                                : FontWeight.w500,
-                            color: _selectedTabIndex == 1
-                                ? Colors.white
-                                : const Color(0xFF64748B),
-                          ),
-                        ),
-                      ),
+
+                  /// Centered "Orders" Title
+                  Text(
+                    'Orders',
+                    style: GoogleFonts.roboto(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF2E0A66),
                     ),
                   ),
+
+                  /// Balanced spacer on right (No notification icon)
+                  SizedBox(width: 42.w),
                 ],
               ),
             ),
 
-            SizedBox(height: 12.h),
+            SizedBox(height: 6.h),
 
-            /// Orders List
+            /// 2. Tabs: Active, Completed, Cancelled
+            _buildTabBar(),
+
+            SizedBox(height: 8.h),
+
+            /// 3. Content: Empty State or Orders List
             Expanded(
-              child: _selectedTabIndex == 0
-                  ? _buildOrdersList(_activeOrders, isActive: true)
-                  : _buildOrdersList(_pastOrders, isActive: false),
+              child: _currentOrders.isEmpty
+                  ? _buildEmptyState()
+                  : _buildOrdersList(_currentOrders),
             ),
           ],
         ),
@@ -187,254 +199,575 @@ class _CustomerOrdersScreenState extends State<CustomerOrdersScreen> {
     );
   }
 
-  Widget _buildOrdersList(List<Map<String, dynamic>> orders, {required bool isActive}) {
-    if (orders.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.receipt_long_outlined,
-              size: 56.sp,
-              color: const Color(0xFFCBD5E1),
-            ),
-            SizedBox(height: 12.h),
-            Text(
-              'No orders yet',
-              style: GoogleFonts.roboto(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF475569),
-              ),
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              'Browse food & groceries and place your order!',
-              style: GoogleFonts.roboto(
-                fontSize: 12.sp,
-                color: const Color(0xFF94A3B8),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+  /// Custom tab bar with solid purple indicator and subtle baseline
+  Widget _buildTabBar() {
+    final tabs = ['Active', 'Completed', 'Cancelled'];
 
-    return ListView.separated(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-      itemCount: orders.length,
-      separatorBuilder: (_, __) => SizedBox(height: 14.h),
-      itemBuilder: (context, index) {
-        final order = orders[index];
-        return Container(
-          padding: EdgeInsets.all(14.r),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: const Color(0xFFF1F5F9)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.04),
-                blurRadius: 10,
-                offset: const Offset(0, 3),
-              ),
-            ],
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        /// Continuous bottom baseline
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: Container(
+            height: 1.5.h,
+            color: const Color(0xFFF1F5F9),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /// Order ID and Status
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    order['id'] as String,
-                    style: GoogleFonts.roboto(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 4.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: order['statusBg'] as Color,
-                      borderRadius: BorderRadius.circular(20.r),
-                    ),
-                    child: Text(
-                      order['status'] as String,
-                      style: GoogleFonts.roboto(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w600,
-                        color: order['statusColor'] as Color,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10.h),
+        ),
 
-              /// Image and Info
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10.r),
-                    child: Image.network(
-                      order['imageUrl'] as String,
-                      width: 64.w,
-                      height: 64.h,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                        width: 64.w,
-                        height: 64.h,
-                        color: const Color(0xFFF1F5F9),
-                        child: Icon(
-                          Icons.fastfood_rounded,
-                          size: 28.sp,
-                          color: const Color(0xFF94A3B8),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          order['restaurant'] as String,
-                          style: GoogleFonts.roboto(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF1E293B),
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          order['items'] as String,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.roboto(
-                            fontSize: 12.sp,
-                            color: const Color(0xFF64748B),
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          order['date'] as String,
-                          style: GoogleFonts.roboto(
-                            fontSize: 11.sp,
-                            color: const Color(0xFF94A3B8),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 12.h),
-
-              const Divider(height: 1, color: Color(0xFFF1F5F9)),
-              SizedBox(height: 10.h),
-
-              /// Price & Action button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        /// Tabs Row
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Row(
+            children: List.generate(tabs.length, (index) {
+              final isSelected = _selectedTabIndex == index;
+              return Expanded(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    setState(() {
+                      _selectedTabIndex = index;
+                    });
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        'Total Price',
-                        style: GoogleFonts.roboto(
-                          fontSize: 11.sp,
-                          color: const Color(0xFF94A3B8),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        child: Text(
+                          tabs[index],
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.roboto(
+                            fontSize: 15.sp,
+                            fontWeight:
+                                isSelected ? FontWeight.w700 : FontWeight.w500,
+                            color: isSelected
+                                ? const Color(0xFF4C1D95)
+                                : const Color(0xFF94A3B8),
+                          ),
                         ),
                       ),
-                      Text(
-                        order['total'] as String,
-                        style: GoogleFonts.roboto(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFF4C1D95),
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        height: 2.5.h,
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? const Color(0xFF5B21B6)
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(2.r),
                         ),
                       ),
                     ],
                   ),
-                  isActive
-                      ? ElevatedButton.icon(
-                          onPressed: () {
-                            AppSnackbar.info(
-                              title: 'Live Tracking',
-                              message:
-                                  'Tracking driver for order ${order['id']} (ETA: ${order['estimatedTime']})',
-                            );
-                          },
-                          icon: Icon(
-                            Icons.navigation_outlined,
-                            size: 14.sp,
-                            color: Colors.white,
-                          ),
-                          label: Text(
-                            'Track Order',
-                            style: GoogleFonts.roboto(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF4C1D95),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 14.w,
-                              vertical: 8.h,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            elevation: 0,
-                          ),
-                        )
-                      : OutlinedButton(
-                          onPressed: () {
-                            AppSnackbar.success(
-                              title: 'Re-ordered',
-                              message:
-                                  'Items from ${order['restaurant']} re-added to your cart.',
-                            );
-                          },
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(
-                              color: Color(0xFF4C1D95),
-                              width: 1,
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16.w,
-                              vertical: 8.h,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                          ),
-                          child: Text(
-                            'Re-Order',
-                            style: GoogleFonts.roboto(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF4C1D95),
-                            ),
+                ),
+              );
+            }),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Empty state matching the mockup with order_empty.png illustration
+  Widget _buildEmptyState() {
+    String subtitle;
+    switch (_selectedTabIndex) {
+      case 0:
+        subtitle = 'You do not have an active order at this time';
+        break;
+      case 1:
+        subtitle = 'You do not have a completed order at this time';
+        break;
+      case 2:
+        subtitle = 'You do not have a cancelled order at this time';
+        break;
+      default:
+        subtitle = 'You do not have an active order at this time';
+    }
+
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 28.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              AppImages.orderEmpty,
+              width: 190.w,
+              height: 190.w,
+              fit: BoxFit.contain,
+              errorBuilder: (_, __, ___) => Icon(
+                Icons.inbox_outlined,
+                size: 80.sp,
+                color: const Color(0xFFCBD5E1),
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              'There are on orders!',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.roboto(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF2E0A66),
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.roboto(
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFF5B21B6),
+              ),
+            ),
+            SizedBox(height: 50.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Orders list view
+  Widget _buildOrdersList(List<Map<String, dynamic>> orders) {
+    return ListView.separated(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      itemCount: orders.length,
+      separatorBuilder: (_, __) => SizedBox(height: 14.h),
+      itemBuilder: (context, index) {
+        final order = orders[index];
+        if (_selectedTabIndex == 1) {
+          return _buildCompletedCard(order);
+        } else if (_selectedTabIndex == 2) {
+          return _buildCancelledCard(order);
+        } else {
+          return _buildActiveCard(order);
+        }
+      },
+    );
+  }
+
+  /// Active card layout
+  Widget _buildActiveCard(Map<String, dynamic> order) {
+    return Container(
+      padding: EdgeInsets.all(12.r),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: const Color(0xFFF1F5F9),
+          width: 1.2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12.r),
+            child: _buildOrderImage(order['imageUrl'] as String),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        order['restaurant'] as String,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.roboto(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF2E0A66),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.star_rounded,
+                          color: const Color(0xFFFFB800),
+                          size: 18.sp,
+                        ),
+                        SizedBox(width: 3.w),
+                        Text(
+                          order['rating'] as String,
+                          style: GoogleFonts.roboto(
+                            fontSize: 12.5.sp,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF2E0A66),
                           ),
                         ),
-                ],
-              ),
-            ],
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  order['orderId'] ?? 'Order#0394',
+                  style: GoogleFonts.roboto(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xFF94A3B8),
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  order['description'] as String,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.roboto(
+                    fontSize: 11.5.sp,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xFF94A3B8),
+                    height: 1.25,
+                  ),
+                ),
+                SizedBox(height: 6.h),
+                Row(
+                  children: [
+                    Text(
+                      order['price'] as String,
+                      style: GoogleFonts.roboto(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w800,
+                        color: const Color(0xFF2E0A66),
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      'Est:${order['estTime'] ?? '15 min'}',
+                      style: GoogleFonts.roboto(
+                        fontSize: 11.5.sp,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF94A3B8),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        );
-      },
+        ],
+      ),
+    );
+  }
+
+  /// Completed card layout with "Reorder" button and date
+  Widget _buildCompletedCard(Map<String, dynamic> order) {
+    return Container(
+      padding: EdgeInsets.all(12.r),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: const Color(0xFFF1F5F9),
+          width: 1.2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12.r),
+            child: _buildOrderImage(order['imageUrl'] as String),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        order['restaurant'] as String,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.roboto(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF2E0A66),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.star_rounded,
+                          color: const Color(0xFFFFB800),
+                          size: 18.sp,
+                        ),
+                        SizedBox(width: 3.w),
+                        Text(
+                          order['rating'] as String,
+                          style: GoogleFonts.roboto(
+                            fontSize: 12.5.sp,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF2E0A66),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  order['orderId'] ?? 'Order#0394',
+                  style: GoogleFonts.roboto(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xFF94A3B8),
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  order['description'] as String,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.roboto(
+                    fontSize: 11.5.sp,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xFF94A3B8),
+                    height: 1.25,
+                  ),
+                ),
+                SizedBox(height: 6.h),
+                Row(
+                  children: [
+                    Text(
+                      order['price'] as String,
+                      style: GoogleFonts.roboto(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w800,
+                        color: const Color(0xFF2E0A66),
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      order['date'] ?? '19 Mar 2026',
+                      style: GoogleFonts.roboto(
+                        fontSize: 11.5.sp,
+                        fontWeight: FontWeight.w400,
+                        color: const Color(0xFF94A3B8),
+                      ),
+                    ),
+                    const Spacer(),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        AppSnackbar.success(
+                          title: 'Re-ordered',
+                          message:
+                              'Items from ${order['restaurant']} re-added to your cart.',
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 14.w,
+                          vertical: 5.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF2E0A66),
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Text(
+                          'Reorder',
+                          style: GoogleFonts.roboto(
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Cancelled card layout with pizza image and red outline "Cancelled" badge
+  Widget _buildCancelledCard(Map<String, dynamic> order) {
+    return Container(
+      padding: EdgeInsets.all(12.r),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: const Color(0xFFF1F5F9),
+          width: 1.2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12.r),
+            child: _buildOrderImage(order['imageUrl'] as String),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        order['restaurant'] as String,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.roboto(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF2E0A66),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.star_rounded,
+                          color: const Color(0xFFFFB800),
+                          size: 18.sp,
+                        ),
+                        SizedBox(width: 3.w),
+                        Text(
+                          order['rating'] as String,
+                          style: GoogleFonts.roboto(
+                            fontSize: 12.5.sp,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF2E0A66),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 5.h),
+                Text(
+                  order['description'] as String,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.roboto(
+                    fontSize: 11.5.sp,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xFF94A3B8),
+                    height: 1.25,
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      order['price'] as String,
+                      style: GoogleFonts.roboto(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w800,
+                        color: const Color(0xFF2E0A66),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 14.w,
+                        vertical: 4.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(16.r),
+                        border: Border.all(
+                          color: const Color(0xFFFF6464),
+                          width: 1.2,
+                        ),
+                      ),
+                      child: Text(
+                        'Cancelled',
+                        style: GoogleFonts.roboto(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFFFF6464),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Builds image supporting asset and fallback safely
+  Widget _buildOrderImage(String imagePath) {
+    if (imagePath.startsWith('http')) {
+      return Image.network(
+        imagePath,
+        width: 88.w,
+        height: 88.w,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => _fallbackImage(),
+      );
+    }
+    return Image.asset(
+      imagePath,
+      width: 88.w,
+      height: 88.w,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => _fallbackImage(),
+    );
+  }
+
+  Widget _fallbackImage() {
+    return Container(
+      width: 88.w,
+      height: 88.w,
+      color: const Color(0xFFF1F5F9),
+      child: Icon(
+        Icons.restaurant_rounded,
+        size: 32.sp,
+        color: const Color(0xFFCBD5E1),
+      ),
     );
   }
 }

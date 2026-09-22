@@ -21,4 +21,10 @@ class AppImages {
   static const String plomobitsImage = '$baseurl/plomobits_image.png';
   static const String plomoshopImage = '$baseurl/plomoshop_image.png';
   static const String notFound = '$baseurl/not_found.png';
+  static const String pepperJulienned = '$baseurl/pepper_julienned.jpg';
+  static const String babySpinach = '$baseurl/baby_spinach.jpg';
+  static const String mushroomSlice = '$baseurl/mushroom_slice.jpg';
+  static const String chocolateMuffins = '$baseurl/chocolate_muffins.jpg';
+  static const String doubleBurger = '$baseurl/double_burger.jpg';
+  static const String orderEmpty = '$baseurl/order_empty.png';
 }

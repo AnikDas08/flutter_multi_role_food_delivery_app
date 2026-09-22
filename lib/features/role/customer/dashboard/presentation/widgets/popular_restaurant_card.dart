@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:flutter_code_structure/config/route/app_routes.dart';
 import 'package:flutter_code_structure/utils/constants/app_images.dart';
 import '../controller/customer_dashboard_controller.dart';
 
@@ -216,7 +217,11 @@ class PopularRestaurantCard extends StatelessWidget {
     );
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap ??
+          () => Get.toNamed(
+                AppRoutes.restaurantDetails,
+                arguments: restaurant,
+              ),
       child: Container(
         width: isVertical ? null : width?.w,
         decoration: BoxDecoration(

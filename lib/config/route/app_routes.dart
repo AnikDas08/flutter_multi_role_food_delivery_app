@@ -43,7 +43,9 @@ import 'package:flutter_code_structure/features/role/customer/wallet/presentatio
 import 'package:flutter_code_structure/features/role/customer/orders/presentation/screen/customer_orders_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/cart/presentation/screen/customer_cart_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/popular_items_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/popular_item_details_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/popular_restaurants_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/restaurant_details_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/search_screen.dart';
 
 class AppRoutes {
@@ -54,8 +56,10 @@ class AppRoutes {
   static const String customerOrders = '/customer_orders_screen.dart';
   static const String customerCart = '/customer_cart_screen.dart';
   static const String popularItems = '/popular_items_screen.dart';
+  static const String popularItemDetails = '/popular_item_details_screen.dart';
   static const String search = '/search_screen.dart';
   static const String popularRestaurants = '/popular_restaurants_screen.dart';
+  static const String restaurantDetails = '/restaurant_details_screen.dart';
   static const String popularShops = '/popular_shops_screen.dart';
   static const String onboarding = '/onboarding_screen.dart';
   static const String roleSelection = '/role_selection_screen.dart';
@@ -142,7 +146,9 @@ class AppRoutes {
     GetPage(name: customerOrders, page: () => const CustomerOrdersScreen()),
     GetPage(name: customerCart, page: () => const CustomerCartScreen()),
     GetPage(name: popularItems, page: () => const PopularItemsScreen()),
+    GetPage(name: popularItemDetails, page: () => const PopularItemDetailsScreen()),
     GetPage(name: popularRestaurants, page: () => const PopularRestaurantsScreen(title: 'Popular Restaurants', isShop: false)),
+    GetPage(name: restaurantDetails, page: () => const RestaurantDetailsScreen()),
     GetPage(name: popularShops, page: () => const PopularRestaurantsScreen(title: 'PlomoShop', isShop: true)),
     GetPage(name: search, page: () => const SearchScreen()),
   ];

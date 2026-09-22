@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:flutter_code_structure/config/route/app_routes.dart';
 import 'package:flutter_code_structure/utils/constants/app_images.dart';
 import '../controller/customer_dashboard_controller.dart';
 
@@ -24,7 +26,11 @@ class PopularItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap ??
+          () => Get.toNamed(
+                AppRoutes.popularItemDetails,
+                arguments: item,
+              ),
       child: Container(
         width: width?.w,
         clipBehavior: Clip.antiAlias,
