@@ -63,6 +63,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
       _openHours = '10:00 AM – 10:00 PM';
       _rating = 5.0;
       _reviewCount = '4.8k reviews';
+
+
       _heroImage = AppImages.chezBurgers;
       _phoneNumber = '+13237502051';
 
