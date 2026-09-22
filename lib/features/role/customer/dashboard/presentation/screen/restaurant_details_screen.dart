@@ -65,6 +65,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
       _reviewCount = '4.8k reviews';
       _heroImage = AppImages.chezBurgers;
       _phoneNumber = '+13237502051';
+
     }
   }
 
