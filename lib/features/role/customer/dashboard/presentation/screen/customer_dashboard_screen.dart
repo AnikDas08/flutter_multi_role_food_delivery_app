@@ -247,34 +247,40 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> {
   Widget _buildSearchBar() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Container(
-        height: 44.h,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30.r),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
-        ),
-        child: TextField(
-          onChanged: (val) => controller.searchQuery.value = val,
-          textAlignVertical: TextAlignVertical.center,
-          style: GoogleFonts.roboto(
-            fontSize: 13.sp,
-            color: const Color(0xFF1E293B),
+      child: GestureDetector(
+        onTap: () => Get.toNamed(AppRoutes.search),
+        child: Container(
+          height: 44.h,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30.r),
+            border: Border.all(color: const Color(0xFFE2E8F0)),
           ),
-          decoration: InputDecoration(
-            isCollapsed: true,
-            prefixIcon: const Icon(
-              Icons.search_rounded,
-              color: Color(0xFF94A3B8),
-              size: 20,
-            ),
-            hintText: 'Type to Search',
-            hintStyle: GoogleFonts.roboto(
-              fontSize: 13.sp,
-              color: const Color(0xFF94A3B8),
-            ),
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          child: Row(
+            children: [
+              SizedBox(width: 16.w),
+              Icon(
+                Icons.search_rounded,
+                color: const Color(0xFF94A3B8),
+                size: 20.sp,
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Text(
+                  'Search for restaurants or dishes',
+                  style: GoogleFonts.roboto(
+                    fontSize: 13.sp,
+                    color: const Color(0xFF94A3B8),
+                  ),
+                ),
+              ),
+              Icon(
+                Icons.mic_none_rounded,
+                color: const Color(0xFF7C3AED),
+                size: 20.sp,
+              ),
+              SizedBox(width: 14.w),
+            ],
           ),
         ),
       ),

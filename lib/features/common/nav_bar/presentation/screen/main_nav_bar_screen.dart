@@ -69,7 +69,6 @@ class MainNavBarScreen extends StatelessWidget {
               children: List.generate(navItems.length, (index) {
                 final item = navItems[index];
                 final isSelected = safeIndex == index;
-
                 return Expanded(
                   child: InkWell(
                     onTap: () => controller.changeIndex(index),

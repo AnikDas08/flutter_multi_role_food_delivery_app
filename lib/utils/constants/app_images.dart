@@ -20,4 +20,5 @@ class AppImages {
   static const String plomoshop = '$baseurl/plomoshop_image.png';
   static const String plomobitsImage = '$baseurl/plomobits_image.png';
   static const String plomoshopImage = '$baseurl/plomoshop_image.png';
+  static const String notFound = '$baseurl/not_found.png';
 }

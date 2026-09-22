@@ -44,6 +44,7 @@ import 'package:flutter_code_structure/features/role/customer/orders/presentatio
 import 'package:flutter_code_structure/features/role/customer/cart/presentation/screen/customer_cart_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/popular_items_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/popular_restaurants_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/search_screen.dart';
 
 class AppRoutes {
   static const String test = '/test_screen.dart';
@@ -53,6 +54,7 @@ class AppRoutes {
   static const String customerOrders = '/customer_orders_screen.dart';
   static const String customerCart = '/customer_cart_screen.dart';
   static const String popularItems = '/popular_items_screen.dart';
+  static const String search = '/search_screen.dart';
   static const String popularRestaurants = '/popular_restaurants_screen.dart';
   static const String popularShops = '/popular_shops_screen.dart';
   static const String onboarding = '/onboarding_screen.dart';
@@ -142,5 +144,6 @@ class AppRoutes {
     GetPage(name: popularItems, page: () => const PopularItemsScreen()),
     GetPage(name: popularRestaurants, page: () => const PopularRestaurantsScreen(title: 'Popular Restaurants', isShop: false)),
     GetPage(name: popularShops, page: () => const PopularRestaurantsScreen(title: 'PlomoShop', isShop: true)),
+    GetPage(name: search, page: () => const SearchScreen()),
   ];
 }

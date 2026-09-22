@@ -73,6 +73,8 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This app requires access to save payment receipts to your photo library.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>This app requires microphone access if recording videos for verification.</string>
+	<string>This app requires microphone access for voice search.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>This app uses speech recognition to help you search for food and restaurants.</string>
 </dict>
 </plist>

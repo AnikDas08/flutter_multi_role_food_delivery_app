@@ -55,6 +55,7 @@ dependencies:
   dio_cookie_manager: ^3.3.0
   cookie_jar: ^4.0.8
   permission_handler: ^13.0.2
+  speech_to_text: ^7.0.0
 
 dev_dependencies:
   flutter_test:
