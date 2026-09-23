@@ -15,6 +15,7 @@ class ChangePasswordScreen extends StatefulWidget {
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _formKey = GlobalKey<FormState>();
+  bool _obscureOldPassword = true;
   bool _obscureNewPassword = true;
   bool _obscureConfirmPassword = true;
 
@@ -99,7 +100,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
                           /// 2. Instruction Subtitle
                           Text(
-                            'Enter and Confirm your New Password\nto Regain Access',
+                            'Enter your Old Password and Confirm your\nNew Password to Regain Access',
                             style: GoogleFonts.roboto(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
@@ -108,9 +109,70 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             ),
                           ),
 
-                          SizedBox(height: 28.h),
+                          SizedBox(height: 24.h),
 
-                          /// 3. New Password Field
+                          /// 3. Old Password Field
+                          Text(
+                            'Old Password',
+                            style: GoogleFonts.roboto(
+                              fontSize: 12.5.sp,
+                              fontWeight: FontWeight.w500,
+                              color: const Color(0xFF374151),
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                          Container(
+                            height: 48.h,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10.r),
+                              border: Border.all(
+                                color: const Color(0xFFE2E8F0),
+                                width: 1.2,
+                              ),
+                            ),
+                            child: TextFormField(
+                              controller: controller.currentPasswordController,
+                              obscureText: _obscureOldPassword,
+                              style: GoogleFonts.roboto(
+                                fontSize: 13.5.sp,
+                                fontWeight: FontWeight.w500,
+                                color: const Color(0xFF1E293B),
+                              ),
+                              decoration: InputDecoration(
+                                hintText: '••••••••',
+                                hintStyle: GoogleFonts.roboto(
+                                  fontSize: 14.sp,
+                                  color: const Color(0xFF94A3B8),
+                                  letterSpacing: 2,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 14.w,
+                                  vertical: 12.h,
+                                ),
+                                border: InputBorder.none,
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscureOldPassword =
+                                          !_obscureOldPassword;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    _obscureOldPassword
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
+                                    size: 20.sp,
+                                    color: const Color(0xFF94A3B8),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 20.h),
+
+                          /// 4. New Password Field
                           Text(
                             'New Password',
                             style: GoogleFonts.roboto(
@@ -171,7 +233,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
                           SizedBox(height: 20.h),
 
-                          /// 4. Confirm New Password Field
+                          /// 5. Confirm New Password Field
                           Text(
                             'Confirm New Password',
                             style: GoogleFonts.roboto(
@@ -232,18 +294,29 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
                           SizedBox(height: 28.h),
 
-                          /// 5. Bottom Action Button: Reset Password
+                          /// 6. Bottom Action Button: Change Password
                           SizedBox(
                             width: double.infinity,
                             height: 50.h,
                             child: ElevatedButton(
                               onPressed: () {
+                                final oldPass = controller
+                                    .currentPasswordController.text
+                                    .trim();
                                 final newPass = controller
                                     .newPasswordController.text
                                     .trim();
                                 final confirmPass = controller
                                     .confirmPasswordController.text
                                     .trim();
+
+                                if (oldPass.isEmpty) {
+                                  AppSnackbar.error(
+                                    title: 'Validation Error',
+                                    message: 'Please enter your old password',
+                                  );
+                                  return;
+                                }
 
                                 if (newPass.isEmpty) {
                                   AppSnackbar.error(

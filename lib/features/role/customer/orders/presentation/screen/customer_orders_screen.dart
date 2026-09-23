@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:flutter_code_structure/config/route/app_routes.dart';
 import 'package:flutter_code_structure/features/common/nav_bar/presentation/controller/nav_bar_controller.dart';
 import 'package:flutter_code_structure/utils/app_snackbar.dart';
 import 'package:flutter_code_structure/utils/constants/app_images.dart';
@@ -17,8 +19,71 @@ class CustomerOrdersScreen extends StatefulWidget {
 class _CustomerOrdersScreenState extends State<CustomerOrdersScreen> {
   int _selectedTabIndex = 0;
 
-  /// Active orders: empty by default so it displays the empty state illustration as requested
-  final List<Map<String, dynamic>> _activeOrders = [];
+  /// Active orders: Populated with active order so user can view proper order details
+  final List<Map<String, dynamic>> _activeOrders = [
+    {
+      'restaurant': 'Burger House',
+      'orderId': 'Order: #12345',
+      'orderNumber': '12345',
+      'date': '18 Sep, 7:30',
+      'rating': '4.8',
+      'description':
+          '1x Burger Combo, 1x Fries with crispy chicken and special sauce...',
+      'price': '\$13.99',
+      'estTime': '12 min',
+      'imageUrl': AppImages.doubleBurger,
+      'items': [
+        {'name': '1x Burger Combo', 'price': '\$8.99'},
+        {'name': '1x Fries', 'price': '\$3.00'},
+      ],
+      'subtotal': '\$11.99',
+      'deliveryFee': '\$2.00',
+      'distance': '1.2M',
+      'total': '\$13.99',
+      'merchantName': 'The Burger king',
+      'merchantStatus': 'Order in Progress',
+      'deliveryMan': {
+        'name': 'Lucas Nathan',
+        'rating': '4.7',
+        'phone': '017218897766',
+        'image': AppImages.profile,
+      },
+      'address': '4140 Parker Rd. Allentown, New Mexico 31134',
+      'instructions':
+          "Please ring the doorbell twice and leave the order at the door. I'll be waiting upstairs. Extra napkins would be appreciated. Thank you!",
+    },
+    {
+      'restaurant': 'Chez Panisse Cafe',
+      'orderId': 'Order: #0394',
+      'orderNumber': '0394',
+      'date': '19 Mar, 12:45',
+      'rating': '4.8',
+      'description':
+          'A hearty, meaty delight loaded with flavor meaty delight loaded...',
+      'price': '\$12.99',
+      'estTime': '15 min',
+      'imageUrl': AppImages.chezBurgers,
+      'items': [
+        {'name': '1x Double Cheeseburger', 'price': '\$10.99'},
+        {'name': '1x Soft Drink', 'price': '\$2.00'},
+      ],
+      'subtotal': '\$10.99',
+      'deliveryFee': '\$2.00',
+      'distance': '1.5M',
+      'total': '\$12.99',
+      'merchantName': 'Chez Panisse Cafe',
+      'merchantStatus': 'Order in Progress',
+      'deliveryMan': {
+        'name': 'Lucas Nathan',
+        'rating': '4.7',
+        'phone': '017218897766',
+        'image': AppImages.profile,
+      },
+      'address': '4140 Parker Rd. Allentown, New Mexico 31134',
+      'instructions':
+          "Please ring the doorbell twice and leave the order at the door. I'll be waiting upstairs. Extra napkins would be appreciated. Thank you!",
+    },
+  ];
 
   /// Completed orders matching the mockup (with "Reorder" button & date)
   final List<Map<String, dynamic>> _completedOrders = [
@@ -131,69 +196,77 @@ class _CustomerOrdersScreenState extends State<CustomerOrdersScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          children: [
-            /// 1. Top Bar: Back button on left, "Orders" title centered, NO notification icon
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  /// Back Button (circular outline)
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: _onBackPress,
-                    child: Container(
-                      width: 42.w,
-                      height: 42.w,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                        border: Border.all(
-                          color: const Color(0xFFE2E8F0),
-                          width: 1.2,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 580),
+            child: Column(
+              children: [
+                /// 1. Top Bar: Back button on left, "Orders" title centered, NO notification icon
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                  child: Row(
+                    children: [
+                      /// Back Button (circular outline)
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: _onBackPress,
+                        child: Container(
+                          width: 42.w.clamp(38.0, 46.0),
+                          height: 42.w.clamp(38.0, 46.0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            border: Border.all(
+                              color: const Color(0xFFE2E8F0),
+                              width: 1.2,
+                            ),
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.arrow_back_ios_new_rounded,
+                              size: 16.sp.clamp(14.0, 18.0),
+                              color: const Color(0xFF2E0A66),
+                            ),
+                          ),
                         ),
                       ),
-                      child: Center(
-                        child: Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          size: 16.sp,
-                          color: const Color(0xFF2E0A66),
+
+                      /// Centered "Orders" Title
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            'Orders',
+                            style: GoogleFonts.roboto(
+                              fontSize: 18.sp.clamp(16.0, 22.0),
+                              fontWeight: FontWeight.w700,
+                              color: const Color(0xFF2E0A66),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+
+                      /// Balanced spacer on right (No notification icon)
+                      SizedBox(width: 42.w.clamp(38.0, 46.0)),
+                    ],
                   ),
+                ),
 
-                  /// Centered "Orders" Title
-                  Text(
-                    'Orders',
-                    style: GoogleFonts.roboto(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF2E0A66),
-                    ),
-                  ),
+                SizedBox(height: 6.h),
 
-                  /// Balanced spacer on right (No notification icon)
-                  SizedBox(width: 42.w),
-                ],
-              ),
+                /// 2. Tabs: Active, Completed, Cancelled
+                _buildTabBar(),
+
+                SizedBox(height: 8.h),
+
+                /// 3. Content: Empty State or Orders List
+                Expanded(
+                  child: _currentOrders.isEmpty
+                      ? _buildEmptyState()
+                      : _buildOrdersList(_currentOrders),
+                ),
+              ],
             ),
-
-            SizedBox(height: 6.h),
-
-            /// 2. Tabs: Active, Completed, Cancelled
-            _buildTabBar(),
-
-            SizedBox(height: 8.h),
-
-            /// 3. Content: Empty State or Orders List
-            Expanded(
-              child: _currentOrders.isEmpty
-                  ? _buildEmptyState()
-                  : _buildOrdersList(_currentOrders),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -288,15 +361,16 @@ class _CustomerOrdersScreenState extends State<CustomerOrdersScreen> {
     }
 
     return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 28.w),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 16.h),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
               AppImages.orderEmpty,
-              width: 190.w,
-              height: 190.w,
+              width: 180.w.clamp(140.0, 220.0),
+              height: 180.w.clamp(140.0, 220.0),
               fit: BoxFit.contain,
               errorBuilder: (_, __, ___) => Icon(
                 Icons.inbox_outlined,
@@ -309,7 +383,7 @@ class _CustomerOrdersScreenState extends State<CustomerOrdersScreen> {
               'There are on orders!',
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
-                fontSize: 20.sp,
+                fontSize: 20.sp.clamp(18.0, 24.0),
                 fontWeight: FontWeight.w700,
                 color: const Color(0xFF2E0A66),
               ),
@@ -319,12 +393,12 @@ class _CustomerOrdersScreenState extends State<CustomerOrdersScreen> {
               subtitle,
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
-                fontSize: 13.sp,
+                fontSize: 13.sp.clamp(12.0, 16.0),
                 fontWeight: FontWeight.w400,
                 color: const Color(0xFF5B21B6),
               ),
             ),
-            SizedBox(height: 50.h),
+            SizedBox(height: 30.h),
           ],
         ),
       ),
@@ -352,24 +426,33 @@ class _CustomerOrdersScreenState extends State<CustomerOrdersScreen> {
 
   /// Active card layout
   Widget _buildActiveCard(Map<String, dynamic> order) {
-    return Container(
-      padding: EdgeInsets.all(12.r),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(
-          color: const Color(0xFFF1F5F9),
-          width: 1.2,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        HapticFeedback.lightImpact();
+        Get.toNamed(
+          AppRoutes.customerOrderDetails,
+          arguments: order,
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.all(12.r),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: const Color(0xFFF1F5F9),
+            width: 1.2,
           ),
-        ],
-      ),
-      child: Row(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
@@ -465,12 +548,22 @@ class _CustomerOrdersScreenState extends State<CustomerOrdersScreen> {
           ),
         ],
       ),
+      )
     );
   }
 
   /// Completed card layout with "Reorder" button and date
   Widget _buildCompletedCard(Map<String, dynamic> order) {
-    return Container(
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        HapticFeedback.lightImpact();
+        Get.toNamed(
+          AppRoutes.customerOrderDetails,
+          arguments: order,
+        );
+      },
+      child: Container(
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -612,6 +705,7 @@ class _CustomerOrdersScreenState extends State<CustomerOrdersScreen> {
           ),
         ],
       ),
+    ),
     );
   }
 

@@ -15,6 +15,7 @@ import '../../../../../utils/constants/app_icons.dart';
 import 'package:flutter_code_structure/features/role/customer/cart/presentation/screen/customer_cart_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/customer_dashboard_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/orders/presentation/screen/customer_orders_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/profile/presentation/screen/customer_profile_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/wallet/presentation/screen/customer_wallet_screen.dart';
 
 class NavItemData {
@@ -111,7 +112,7 @@ class NavBarController extends GetxController {
         CustomerWalletScreen(),
         CustomerOrdersScreen(),
         CustomerCartScreen(),
-        ProfileScreen(),
+        CustomerProfileScreen(),
       ];
     }
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -169,20 +170,27 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> {
             ),
           ),
 
-          /// Balance Pill Badge ($24.50)
-          Obx(
-            () => Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
-              decoration: BoxDecoration(
-                color: const Color(0xFFC026D3),
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: Text(
-                controller.balance.value,
-                style: GoogleFonts.roboto(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+          /// Balance Pill Badge ($24.50) -> opens Customer Wallet
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              HapticFeedback.lightImpact();
+              Get.toNamed(AppRoutes.customerWallet);
+            },
+            child: Obx(
+              () => Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFC026D3),
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Text(
+                  controller.balance.value,
+                  style: GoogleFonts.roboto(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

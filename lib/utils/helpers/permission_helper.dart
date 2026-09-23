@@ -28,7 +28,7 @@ class AppPermissionHelper {
       _showPermissionDeniedDialog(
         title: 'Camera Permission Required',
         message:
-            'Camera permission is required to take photos of transfer proofs. Please enable it in your device settings.',
+            'Camera permission is required to take photos. Please enable it in your device settings.',
       );
       return false;
     }
@@ -53,7 +53,7 @@ class AppPermissionHelper {
         _showPermissionDeniedDialog(
           title: 'Photo Library Permission Required',
           message:
-              'Photo library permission is required to select payment receipts. Please enable it in your device settings.',
+              'Photo library permission is required to select photos. Please enable it in your device settings.',
         );
         return false;
       }
@@ -79,7 +79,7 @@ class AppPermissionHelper {
       _showPermissionDeniedDialog(
         title: 'Storage Permission Required',
         message:
-            'Storage permission is required to select documents. Please enable it in your device settings.',
+            'Storage permission is required to select photos. Please enable it in your device settings.',
       );
       return false;
     }

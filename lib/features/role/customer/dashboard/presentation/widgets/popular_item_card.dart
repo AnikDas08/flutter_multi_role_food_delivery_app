@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +14,9 @@ class PopularItemCard extends StatelessWidget {
   final VoidCallback? onTap;
   final double? width;
   final double? imageHeight;
+  final bool? isFavorite;
+  final bool showFavoriteIcon;
+  final VoidCallback? onFavoriteTap;
 
   const PopularItemCard({
     super.key,
@@ -21,6 +25,9 @@ class PopularItemCard extends StatelessWidget {
     this.onTap,
     this.width = 152,
     this.imageHeight,
+    this.isFavorite,
+    this.showFavoriteIcon = true,
+    this.onFavoriteTap,
   });
 
   @override
@@ -58,31 +65,109 @@ class PopularItemCard extends StatelessWidget {
                 top: Radius.circular(16.r),
                 bottom: Radius.circular(14.r),
               ),
-              child: item.imageUrl.startsWith('http')
-                  ? Image.network(
-                      item.imageUrl,
-                      height: (imageHeight ?? 100).h,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Image.asset(
-                        AppImages.beefPizza,
-                        height: (imageHeight ?? 100).h,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : Image.asset(
-                      item.imageUrl,
-                      height: (imageHeight ?? 100).h,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Image.asset(
-                        AppImages.beefPizza,
-                        height: (imageHeight ?? 100).h,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
+              child: Stack(
+                children: [
+                  item.imageUrl.startsWith('http')
+                      ? Image.network(
+                          item.imageUrl,
+                          height: (imageHeight ?? 100).h,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Image.asset(
+                            AppImages.beefPizza,
+                            height: (imageHeight ?? 100).h,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : Image.asset(
+                          item.imageUrl,
+                          height: (imageHeight ?? 100).h,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Image.asset(
+                            AppImages.beefPizza,
+                            height: (imageHeight ?? 100).h,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+
+                  /// Heart / Favorite Icon Button - Always shown
+                  if (showFavoriteIcon)
+                    Positioned(
+                      top: 7.h,
+                      right: 7.w,
+                      child: isFavorite != null
+                          ? GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: onFavoriteTap,
+                              child: Container(
+                                padding: EdgeInsets.all(5.r),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: 0.12),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(
+                                  isFavorite!
+                                      ? Icons.favorite_rounded
+                                      : Icons.favorite_border_rounded,
+                                  size: 15.sp,
+                                  color: isFavorite!
+                                      ? const Color(0xFFEF4444)
+                                      : const Color(0xFF94A3B8),
+                                ),
+                              ),
+                            )
+                          : Obx(
+                              () {
+                                final fav = controller.isItemFavorite(item.id);
+                                return GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: onFavoriteTap ??
+                                      () {
+                                        HapticFeedback.lightImpact();
+                                        controller.toggleItemFavorite(
+                                          item.id,
+                                          item.title,
+                                        );
+                                      },
+                                  child: Container(
+                                    padding: EdgeInsets.all(5.r),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withValues(alpha: 0.12),
+                                          blurRadius: 4,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Icon(
+                                      fav
+                                          ? Icons.favorite_rounded
+                                          : Icons.favorite_border_rounded,
+                                      size: 15.sp,
+                                      color: fav
+                                          ? const Color(0xFFEF4444)
+                                          : const Color(0xFF94A3B8),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                     ),
+                ],
+              ),
             ),
 
             /// 2. Middle Information (Title, Rating, Distance, Description)

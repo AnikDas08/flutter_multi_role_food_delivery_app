@@ -40,6 +40,7 @@ import 'package:flutter_code_structure/features/role/driver/profile/presentation
 import 'package:flutter_code_structure/features/role/driver/profile/presentation/screen/account_verification_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/customer_dashboard_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/wallet/presentation/screen/customer_wallet_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/wallet/presentation/screen/customer_wallet_activity_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/orders/presentation/screen/customer_orders_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/cart/presentation/screen/customer_cart_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/popular_items_screen.dart';
@@ -47,14 +48,36 @@ import 'package:flutter_code_structure/features/role/customer/dashboard/presenta
 import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/popular_restaurants_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/restaurant_details_screen.dart';
 import 'package:flutter_code_structure/features/role/customer/dashboard/presentation/screen/search_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/checkout/presentation/screen/order_confirmation_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/orders/presentation/screen/customer_order_details_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/orders/presentation/screen/share_review_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/orders/presentation/screen/customer_live_tracking_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/profile/presentation/screen/customer_profile_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/profile/presentation/screen/customer_edit_profile_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/profile/presentation/screen/cod_pin_management_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/profile/presentation/screen/customer_delivery_address_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/profile/presentation/screen/customer_favorites_screen.dart';
+import 'package:flutter_code_structure/features/role/customer/profile/presentation/screen/contact_support_screen.dart';
+import 'package:flutter_code_structure/features/common/privacy_policy/screen/privacy_policy_screen.dart';
 
 class AppRoutes {
   static const String test = '/test_screen.dart';
   static const String splash = '/';
+  static const String shareReview = '/share_review_screen.dart';
+  static const String customerLiveTracking = '/customer_live_tracking_screen.dart';
+  static const String customerProfile = '/customer_profile_screen.dart';
+  static const String customerEditProfile = '/customer_edit_profile_screen.dart';
+  static const String codPinManagement = '/cod_pin_management_screen.dart';
+  static const String customerDeliveryAddress = '/customer_delivery_address_screen.dart';
+  static const String customerFavorites = '/customer_favorites_screen.dart';
+  static const String contactSupport = '/contact_support_screen.dart';
   static const String customerDashboard = '/customer_dashboard_screen.dart';
   static const String customerWallet = '/customer_wallet_screen.dart';
+  static const String customerWalletActivity = '/customer_wallet_activity_screen.dart';
   static const String customerOrders = '/customer_orders_screen.dart';
+  static const String customerOrderDetails = '/customer_order_details_screen.dart';
   static const String customerCart = '/customer_cart_screen.dart';
+  static const String orderConfirmation = '/order_confirmation_screen.dart';
   static const String popularItems = '/popular_items_screen.dart';
   static const String popularItemDetails = '/popular_item_details_screen.dart';
   static const String search = '/search_screen.dart';
@@ -143,13 +166,25 @@ class AppRoutes {
     GetPage(name: accountVerification, page: () => const AccountVerificationScreen()),
     GetPage(name: customerDashboard, page: () => const CustomerDashboardScreen()),
     GetPage(name: customerWallet, page: () => const CustomerWalletScreen()),
+    GetPage(name: customerWalletActivity, page: () => const CustomerWalletActivityScreen()),
     GetPage(name: customerOrders, page: () => const CustomerOrdersScreen()),
+    GetPage(name: customerOrderDetails, page: () => const CustomerOrderDetailsScreen()),
     GetPage(name: customerCart, page: () => const CustomerCartScreen()),
+    GetPage(name: orderConfirmation, page: () => const OrderConfirmationScreen()),
     GetPage(name: popularItems, page: () => const PopularItemsScreen()),
     GetPage(name: popularItemDetails, page: () => const PopularItemDetailsScreen()),
     GetPage(name: popularRestaurants, page: () => const PopularRestaurantsScreen(title: 'Popular Restaurants', isShop: false)),
     GetPage(name: restaurantDetails, page: () => const RestaurantDetailsScreen()),
     GetPage(name: popularShops, page: () => const PopularRestaurantsScreen(title: 'PlomoShop', isShop: true)),
     GetPage(name: search, page: () => const SearchScreen()),
+    GetPage(name: shareReview, page: () => const ShareReviewScreen()),
+    GetPage(name: customerLiveTracking, page: () => const CustomerLiveTrackingScreen()),
+    GetPage(name: customerProfile, page: () => const CustomerProfileScreen()),
+    GetPage(name: customerEditProfile, page: () => const CustomerEditProfileScreen()),
+    GetPage(name: codPinManagement, page: () => const CodPinManagementScreen()),
+    GetPage(name: customerDeliveryAddress, page: () => const CustomerDeliveryAddressScreen()),
+    GetPage(name: customerFavorites, page: () => const CustomerFavoritesScreen()),
+    GetPage(name: contactSupport, page: () => const ContactSupportScreen()),
+    GetPage(name: privacyPolicy, page: () => const PrivacyPolicyScreen()),
   ];
 }

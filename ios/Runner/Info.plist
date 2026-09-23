@@ -67,11 +67,11 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>This app requires access to your camera to capture proof of transfer receipts.</string>
+	<string>This app requires access to your camera to take photos and chat attachments.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to your photo library to select proof of payment documents.</string>
+	<string>This app requires access to your photo library to select photos and chat attachments.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>This app requires access to save payment receipts to your photo library.</string>
+	<string>This app requires access to save photos to your photo library.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app requires microphone access for voice search.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>

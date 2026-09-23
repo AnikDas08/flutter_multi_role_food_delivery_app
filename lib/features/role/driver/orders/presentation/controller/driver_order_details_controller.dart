@@ -1,3 +1,4 @@
+import 'package:flutter_code_structure/config/route/app_routes.dart';
 import 'package:flutter_code_structure/utils/app_snackbar.dart';
 import 'package:get/get.dart';
 
@@ -23,9 +24,14 @@ class DriverOrderDetailsController extends GetxController {
   }
 
   void openMessage(String recipient) {
-    AppSnackbar.success(
-      title: 'Chat',
-      message: 'Opening conversation with $recipient.',
+    Get.toNamed(
+      AppRoutes.message,
+      arguments: {
+        'orderId': '12345',
+        'restaurant': recipient,
+        'status': 'Order in Progress',
+        'isMerchant': false,
+      },
     );
   }
 

@@ -302,6 +302,39 @@ class CustomerDashboardController extends GetxController {
           ? plomoShopRestaurants
           : popularRestaurants;
 
+  /// Favorite item IDs set
+  final RxSet<String> favoriteItemIds = <String>{
+    'item_1',
+    'item_2',
+    'item_3',
+    'fav_item_1',
+    'fav_item_2',
+    'fav_item_3',
+    'fav_item_4',
+  }.obs;
+
+  bool isItemFavorite(String id) => favoriteItemIds.contains(id);
+
+  void toggleItemFavorite(String id, [String? title]) {
+    if (favoriteItemIds.contains(id)) {
+      favoriteItemIds.remove(id);
+      AppSnackbar.info(
+        title: 'Removed from Favorites',
+        message: title != null
+            ? '$title removed from favorites'
+            : 'Item removed from favorites',
+      );
+    } else {
+      favoriteItemIds.add(id);
+      AppSnackbar.success(
+        title: 'Saved',
+        message: title != null
+            ? '$title added to favorites'
+            : 'Item added to favorites',
+      );
+    }
+  }
+
   void addToCart(CustomerPopularItem item) {
     cartCount.value++;
     AppSnackbar.success(

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:flutter_code_structure/config/route/app_routes.dart';
 import 'package:flutter_code_structure/utils/app_snackbar.dart';
 import 'package:flutter_code_structure/utils/constants/app_images.dart';
 import '../controller/customer_dashboard_controller.dart';
@@ -1171,14 +1172,26 @@ class _PopularItemDetailsScreenState extends State<PopularItemDetailsScreen> {
             /// Checkout Button
             Expanded(
               child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
                   final dashboardCtrl =
                       Get.find<CustomerDashboardController>();
                   dashboardCtrl.cartCount.value += _quantity.value;
-                  AppSnackbar.success(
-                    title: 'Added to Cart',
-                    message:
-                        '${_quantity.value}x ${_item.title} added (\$${_totalPrice.toStringAsFixed(2)})',
+                  Get.toNamed(
+                    AppRoutes.orderConfirmation,
+                    arguments: {
+                      'fromCart': false,
+                      'items': [
+                        {
+                          'title': _item.title,
+                          'price': _totalPrice / _quantity.value,
+                          'quantity': _quantity.value,
+                          'imageUrl': _item.imageUrl.isNotEmpty
+                              ? _item.imageUrl
+                              : AppImages.doubleBurger,
+                        }
+                      ],
+                    },
                   );
                 },
                 child: Container(
