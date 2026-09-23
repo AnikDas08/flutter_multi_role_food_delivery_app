@@ -159,7 +159,13 @@ class RateAppBottomSheet extends StatelessWidget {
                     onPressed: () {
                       HapticFeedback.lightImpact();
                       Navigator.pop(context);
-                      Get.toNamed(AppRoutes.shareReview);
+                      Get.toNamed(
+                        AppRoutes.shareReview,
+                        arguments: {
+                          'fromRateApp': true,
+                          'showOrderDelivered': false,
+                        },
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF2E0A66),

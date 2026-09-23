@@ -108,98 +108,100 @@ class _CustomerCartScreenState extends State<CustomerCartScreen> {
   void _showRemoveAllDialog() {
     if (_items.isEmpty) return;
     Get.bottomSheet(
-      Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40.w,
-              height: 4.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFFE2E8F0),
-                borderRadius: BorderRadius.circular(2.r),
+      SafeArea(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE2E8F0),
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
               ),
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              'Clear All Items?',
-              style: GoogleFonts.roboto(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF2E0A66),
+              SizedBox(height: 16.h),
+              Text(
+                'Clear All Items?',
+                style: GoogleFonts.roboto(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF2E0A66),
+                ),
               ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              'Are you sure you want to remove all items from your cart?',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.roboto(
-                fontSize: 13.sp,
-                color: const Color(0xFF64748B),
+              SizedBox(height: 8.h),
+              Text(
+                'Are you sure you want to remove all items from your cart?',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.roboto(
+                  fontSize: 13.sp,
+                  color: const Color(0xFF64748B),
+                ),
               ),
-            ),
-            SizedBox(height: 20.h),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => Get.back(),
-                    style: OutlinedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
-                      side: const BorderSide(color: Color(0xFFE2E8F0)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
+              SizedBox(height: 20.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      style: OutlinedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        side: const BorderSide(color: Color(0xFFE2E8F0)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      'Cancel',
-                      style: GoogleFonts.roboto(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF64748B),
+                      child: Text(
+                        'Cancel',
+                        style: GoogleFonts.roboto(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF64748B),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Get.back();
-                      _items.clear();
-                      HapticFeedback.mediumImpact();
-                      AppSnackbar.info(
-                        title: 'Cart Cleared',
-                        message: 'All items removed from your cart.',
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFEF4444),
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.back();
+                        _items.clear();
+                        HapticFeedback.mediumImpact();
+                        AppSnackbar.info(
+                          title: 'Cart Cleared',
+                          message: 'All items removed from your cart.',
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFEF4444),
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        elevation: 0,
                       ),
-                      elevation: 0,
-                    ),
-                    child: Text(
-                      'Remove All',
-                      style: GoogleFonts.roboto(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                      child: Text(
+                        'Remove All',
+                        style: GoogleFonts.roboto(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 10.h),
-          ],
+                ],
+              ),
+              SizedBox(height: 10.h),
+            ],
+          ),
         ),
       ),
     );

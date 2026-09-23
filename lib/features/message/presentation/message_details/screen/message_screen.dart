@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_code_structure/config/route/app_routes.dart';
 import 'package:flutter_code_structure/utils/app_snackbar.dart';
 import 'package:flutter_code_structure/utils/constants/app_images.dart';
@@ -47,7 +48,10 @@ class _MessageScreenState extends State<MessageScreen> {
   String _orderId = 'Order ID: #12345';
   String _restaurantName = 'The Burger king';
   String _orderStatus = 'Order in Progress';
+  String? _avatarUrl;
+  String _recipientRole = '';
   bool _isMerchant = true;
+  bool _showShare = true;
 
   /// Initial messages accurately matching the screenshot
   late final List<_ChatMessage> _messages;
@@ -59,47 +63,121 @@ class _MessageScreenState extends State<MessageScreen> {
     // Read route arguments or query parameters if provided
     final args = Get.arguments;
     if (args is Map) {
-      if (args['orderId'] != null) _orderId = 'Order ID: #${args['orderId']}';
+      if (args['orderId'] != null) {
+        final rawId = args['orderId'].toString().replaceAll('Order ID:', '').replaceAll('#', '').trim();
+        _orderId = 'Order ID: #$rawId';
+      }
       if (args['restaurant'] != null) _restaurantName = args['restaurant'];
+      if (args['name'] != null) _restaurantName = args['name'];
       if (args['status'] != null) _orderStatus = args['status'];
+      if (args['avatar'] != null) _avatarUrl = args['avatar'];
+      if (args['image'] != null) _avatarUrl = args['image'];
+      if (args['role'] != null) _recipientRole = args['role'];
       if (args['isMerchant'] != null) {
         _isMerchant = args['isMerchant'] == true;
+      }
+      if (args['showShare'] != null) {
+        _showShare = args['showShare'] == true;
+      }
+      if (args['hideShare'] == true) {
+        _showShare = false;
       }
     }
     final params = Get.parameters;
     if (params['orderId'] != null && params['orderId']!.isNotEmpty) {
-      _orderId = 'Order ID: #${params['orderId']}';
+      final rawId = params['orderId']!.replaceAll('Order ID:', '').replaceAll('#', '').trim();
+      _orderId = 'Order ID: #$rawId';
     }
     if (params['name'] != null && params['name']!.isNotEmpty) {
       _restaurantName = params['name']!;
     }
+    if (params['image'] != null && params['image']!.isNotEmpty) {
+      _avatarUrl = params['image'];
+    }
+    if (params['status'] != null && params['status']!.isNotEmpty) {
+      _orderStatus = params['status']!;
+    }
+    if (params['role'] != null && params['role']!.isNotEmpty) {
+      _recipientRole = params['role']!;
+    }
     if (params['isMerchant'] != null) {
       _isMerchant = params['isMerchant'] == 'true';
     }
-
-    // Additional check: if name or recipient indicates driver, hide share icon
-    if (_restaurantName.toLowerCase().contains('driver') ||
-        _restaurantName.toLowerCase().contains('rider')) {
-      _isMerchant = false;
+    if (params['showShare'] != null) {
+      _showShare = params['showShare'] == 'true';
+    }
+    if (params['hideShare'] == 'true') {
+      _showShare = false;
     }
 
-    _messages = [
-      _ChatMessage(
-        id: 'msg_1',
-        text: 'Hello! Jhon abraham',
-        imageUrl: AppImages.chezBurgers,
-        isFileImage: false,
-        time: '09:25 AM',
-        isMe: true,
-      ),
-      _ChatMessage(
-        id: 'msg_2',
-        text: 'Hello ! Jane How are you?',
-        senderName: _restaurantName,
-        time: '09:25 AM',
-        isMe: false,
-      ),
-    ];
+    // Role checks: hide share icon and treat as non-merchant if driver/customer
+    final lowerName = _restaurantName.toLowerCase();
+    final lowerRole = _recipientRole.toLowerCase();
+    if (lowerRole == 'driver' ||
+        lowerRole == 'customer' ||
+        lowerName.contains('driver') ||
+        lowerName.contains('rider') ||
+        lowerName.contains('customer')) {
+      _isMerchant = false;
+      _showShare = false;
+    }
+
+    final bool isDriverChat =
+        lowerRole == 'driver' || lowerName.contains('driver') || lowerName.contains('rider');
+    final bool isCustomerChat =
+        lowerRole == 'customer' || lowerName.contains('customer');
+
+    if (isDriverChat) {
+      _messages = [
+        _ChatMessage(
+          id: 'msg_1',
+          text: 'Hi Alex, the order is currently being prepared and will be ready shortly.',
+          time: '09:20 AM',
+          isMe: true,
+        ),
+        _ChatMessage(
+          id: 'msg_2',
+          text: 'Got it! I am on my way to the restaurant now.',
+          senderName: _restaurantName,
+          time: '09:22 AM',
+          isMe: false,
+        ),
+      ];
+    } else if (isCustomerChat) {
+      _messages = [
+        _ChatMessage(
+          id: 'msg_1',
+          text: 'Hi Sarah, thanks for your order! We are preparing your fresh meal now.',
+          time: '09:20 AM',
+          isMe: true,
+        ),
+        _ChatMessage(
+          id: 'msg_2',
+          text: 'Thank you so much! Please add extra napkins if possible.',
+          senderName: _restaurantName,
+          time: '09:24 AM',
+          isMe: false,
+        ),
+      ];
+    } else {
+      _messages = [
+        _ChatMessage(
+          id: 'msg_1',
+          text: 'Hello! Jhon abraham',
+          imageUrl: _isMerchant ? AppImages.chezBurgers : null,
+          isFileImage: false,
+          time: '09:25 AM',
+          isMe: true,
+        ),
+        _ChatMessage(
+          id: 'msg_2',
+          text: 'Hello ! Jane How are you?',
+          senderName: _restaurantName,
+          time: '09:25 AM',
+          isMe: false,
+        ),
+      ];
+    }
   }
 
   @override
@@ -384,35 +462,37 @@ class _MessageScreenState extends State<MessageScreen> {
     );
   }
 
-  /// 2. Restaurant Header: Circular Logo, "The Burger king", "Order in Progress"
+  /// 2. Restaurant / Contact Header: Circular Logo or photo, Name, and Status
   Widget _buildRestaurantHeader() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
       child: Row(
         children: [
-          /// Avatar: Burger King emblem for merchant, Delivery Driver icon for driver
-          if (_isMerchant)
+          /// Avatar: User/Driver Photo, Burger King emblem for merchant, or role-based icon
+          if (_avatarUrl != null && _avatarUrl!.isNotEmpty)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(22.r),
+              child: CachedNetworkImage(
+                imageUrl: _avatarUrl!,
+                width: 44.w.clamp(40.0, 48.0),
+                height: 44.w.clamp(40.0, 48.0),
+                fit: BoxFit.cover,
+                placeholder: (_, __) => Container(
+                  width: 44.w.clamp(40.0, 48.0),
+                  height: 44.w.clamp(40.0, 48.0),
+                  color: const Color(0xFFF3E8FF),
+                ),
+                errorWidget: (_, __, ___) => _buildFallbackAvatar(),
+              ),
+            )
+          else if (_isMerchant)
             const _BurgerKingAvatar(size: 44)
           else
-            Container(
-              width: 44.w.clamp(40.0, 48.0),
-              height: 44.w.clamp(40.0, 48.0),
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFF3E8FF),
-              ),
-              child: Center(
-                child: Icon(
-                  Icons.delivery_dining_rounded,
-                  color: const Color(0xFF7C3AED),
-                  size: 24.sp.clamp(20.0, 28.0),
-                ),
-              ),
-            ),
+            _buildFallbackAvatar(),
 
           SizedBox(width: 12.w),
 
-          /// Restaurant Name & Subtitle
+          /// Restaurant / Contact Name & Subtitle
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -438,6 +518,46 @@ class _MessageScreenState extends State<MessageScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildFallbackAvatar() {
+    final lowerName = _restaurantName.toLowerCase();
+    final lowerRole = _recipientRole.toLowerCase();
+    final isCustomer = lowerRole == 'customer' || lowerName.contains('customer');
+
+    if (isCustomer) {
+      return Container(
+        width: 44.w.clamp(40.0, 48.0),
+        height: 44.w.clamp(40.0, 48.0),
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: Color(0xFFEFF6FF),
+        ),
+        child: Center(
+          child: Icon(
+            Icons.person_rounded,
+            color: const Color(0xFF3B82F6),
+            size: 24.sp.clamp(20.0, 28.0),
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      width: 44.w.clamp(40.0, 48.0),
+      height: 44.w.clamp(40.0, 48.0),
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        color: Color(0xFFF3E8FF),
+      ),
+      child: Center(
+        child: Icon(
+          Icons.delivery_dining_rounded,
+          color: const Color(0xFF7C3AED),
+          size: 24.sp.clamp(20.0, 28.0),
+        ),
       ),
     );
   }
@@ -713,8 +833,8 @@ class _MessageScreenState extends State<MessageScreen> {
           ),
 
           /// Vibrant Magenta Share Button
-          /// Shown only when chatting with merchant, hidden when driver
-          if (_isMerchant) ...[
+          /// Shown only when chatting with merchant and share icon is enabled
+          if (_isMerchant && _showShare) ...[
             SizedBox(width: 8.w),
             GestureDetector(
               behavior: HitTestBehavior.opaque,

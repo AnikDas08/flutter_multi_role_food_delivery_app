@@ -39,11 +39,11 @@ class _AddEditMenuScreenState extends State<AddEditMenuScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const CommonAppBar(
-        title: 'Add or Edit Menu',
+      appBar: CommonAppBar(
+        title: controller.isEditing ? 'Edit Menu' : 'Add Menu',
         titleSize: 18,
         titleWeight: FontWeight.w700,
-        titleColor: Color(0xFF1E293B),
+        titleColor: const Color(0xFF1E293B),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
@@ -141,7 +141,11 @@ class _AddEditMenuScreenState extends State<AddEditMenuScreen> {
           ],
         ),
         child: GestureDetector(
-          onTap: controller.submit,
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            FocusScope.of(context).unfocus();
+            controller.submit();
+          },
           child: Container(
             height: 52.h,
             width: double.infinity,

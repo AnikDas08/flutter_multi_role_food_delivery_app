@@ -34,7 +34,17 @@ class MerchantMenuController extends GetxController {
   static MerchantMenuController get instance =>
       Get.find<MerchantMenuController>();
 
-  final TextEditingController searchController = TextEditingController();
+  TextEditingController? _searchController;
+  TextEditingController get searchController {
+    if (_searchController == null) {
+      _searchController = TextEditingController(text: searchQuery.value);
+      _searchController!.addListener(() {
+        searchQuery.value = _searchController!.text.trim();
+      });
+    }
+    return _searchController!;
+  }
+
   final RxString searchQuery = ''.obs;
   final Rx<MenuFilter> selectedFilter = MenuFilter.all.obs;
 
@@ -120,16 +130,9 @@ class MerchantMenuController extends GetxController {
   ].obs;
 
   @override
-  void onInit() {
-    super.onInit();
-    searchController.addListener(() {
-      searchQuery.value = searchController.text.trim();
-    });
-  }
-
-  @override
   void onClose() {
-    searchController.dispose();
+    _searchController?.dispose();
+    _searchController = null;
     super.onClose();
   }
 

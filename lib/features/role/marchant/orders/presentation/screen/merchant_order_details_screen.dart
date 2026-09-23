@@ -389,6 +389,7 @@ class MerchantOrderDetailsScreen extends StatelessWidget {
               /// Message Button
               Expanded(
                 child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   onTap: controller.messageDriver,
                   child: Container(
                     height: 40.h,
@@ -759,6 +760,7 @@ class MerchantOrderDetailsScreen extends StatelessWidget {
 
               /// Customer Message Button
               GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: controller.messageCustomer,
                 child: Container(
                   height: 32.h,

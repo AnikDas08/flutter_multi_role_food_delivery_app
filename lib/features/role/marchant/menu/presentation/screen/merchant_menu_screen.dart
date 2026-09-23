@@ -9,15 +9,42 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_code_structure/utils/constants/app_icons.dart';
 import '../controller/merchant_menu_controller.dart';
 
-class MerchantMenuScreen extends StatelessWidget {
+class MerchantMenuScreen extends StatefulWidget {
   const MerchantMenuScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Get.isRegistered<MerchantMenuController>()
+  State<MerchantMenuScreen> createState() => _MerchantMenuScreenState();
+}
+
+class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
+  late final MerchantMenuController controller;
+  late final TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.isRegistered<MerchantMenuController>()
         ? Get.find<MerchantMenuController>()
         : Get.put(MerchantMenuController());
 
+    _searchController =
+        TextEditingController(text: controller.searchQuery.value);
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    controller.searchQuery.value = _searchController.text.trim();
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
@@ -59,38 +86,51 @@ class MerchantMenuScreen extends StatelessWidget {
                       width: 1.2,
                     ),
                   ),
-                  child: TextField(
-                    controller: controller.searchController,
-                    textAlignVertical: TextAlignVertical.center,
-                    style: GoogleFonts.roboto(
-                      fontSize: 14.sp,
-                      color: const Color(0xFF1E293B),
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Type to Search',
-                      hintStyle: GoogleFonts.roboto(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xFF94A3B8),
+                  child: Center(
+                    child: TextField(
+                      controller: _searchController,
+                      textAlign: TextAlign.start,
+                      textAlignVertical: TextAlignVertical.center,
+                      style: GoogleFonts.roboto(
+                        fontSize: 14.sp,
+                        color: const Color(0xFF1E293B),
+                        height: 1.2,
                       ),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
-                      suffixIcon: Obx(() {
-                        if (controller.searchQuery.value.isNotEmpty) {
-                          return GestureDetector(
-                            onTap: () {
-                              controller.searchController.clear();
-                              controller.searchQuery.value = '';
-                            },
-                            child: const Icon(
-                              Icons.close_rounded,
-                              size: 18,
-                              color: Color(0xFF94A3B8),
-                            ),
-                          );
-                        }
-                        return const SizedBox.shrink();
-                      }),
+                      decoration: InputDecoration(
+                        hintText: 'Type to Search',
+                        hintStyle: GoogleFonts.roboto(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w400,
+                          color: const Color(0xFF94A3B8),
+                          height: 1.2,
+                        ),
+                        border: InputBorder.none,
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                          vertical: 12.h,
+                        ),
+                        suffixIconConstraints: BoxConstraints.tightFor(
+                          width: 36.w,
+                          height: 44.h,
+                        ),
+                        suffixIcon: Obx(() {
+                          if (controller.searchQuery.value.isNotEmpty) {
+                            return GestureDetector(
+                              onTap: () {
+                                _searchController.clear();
+                                controller.searchQuery.value = '';
+                              },
+                              child: const Icon(
+                                Icons.close_rounded,
+                                size: 18,
+                                color: Color(0xFF94A3B8),
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        }),
+                      ),
                     ),
                   ),
                 ),

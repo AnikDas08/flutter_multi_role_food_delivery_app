@@ -72,16 +72,38 @@ class MerchantOrderDetailsController extends GetxController {
   }
 
   void messageDriver() {
-    AppSnackbar.info(
-      title: "Message Driver",
-      message: "Opening chat with driver Alex Rivera",
+    Get.toNamed(
+      AppRoutes.message,
+      arguments: {
+        'orderId': orderId.replaceAll('#', ''),
+        'restaurant': 'Alex Rivera (Driver)',
+        'name': 'Alex Rivera',
+        'status': 'Assigned Driver',
+        'avatar':
+            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200',
+        'isMerchant': false,
+        'hideShare': true,
+        'showShare': false,
+        'role': 'Driver',
+      },
     );
   }
 
   void messageCustomer() {
-    AppSnackbar.info(
-      title: "Message Customer",
-      message: "Opening chat with customer Sarah Johnson",
+    Get.toNamed(
+      AppRoutes.message,
+      arguments: {
+        'orderId': orderId.replaceAll('#', ''),
+        'restaurant': 'Sarah Johnson (Customer)',
+        'name': 'Sarah Johnson',
+        'status': 'Customer',
+        'avatar':
+            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200',
+        'isMerchant': false,
+        'hideShare': true,
+        'showShare': false,
+        'role': 'Customer',
+      },
     );
   }
 }

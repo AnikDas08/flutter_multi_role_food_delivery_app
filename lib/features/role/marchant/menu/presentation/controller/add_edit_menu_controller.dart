@@ -110,9 +110,14 @@ class AddEditMenuController extends GetxController {
     final price = double.tryParse(priceText) ?? 12.99;
 
     final itemNoText = itemNoController.text.trim();
+    final int nextCount = Get.isRegistered<MerchantMenuController>()
+        ? MerchantMenuController.instance.totalCount + 1
+        : 1;
     final itemNumber = itemNoText.isNotEmpty
-        ? 'Item No: $itemNoText'
-        : 'Item No: ${MerchantMenuController.instance.totalCount + 1 < 10 ? '0' : ''}${MerchantMenuController.instance.totalCount + 1}';
+        ? (itemNoText.toLowerCase().startsWith('item no')
+            ? itemNoText
+            : 'Item No: $itemNoText')
+        : 'Item No: ${nextCount < 10 ? '0' : ''}$nextCount';
 
     final category = selectedCategory.value ?? 'Plomobites';
     final quantityLimit = quantityLimitController.text.trim().isNotEmpty
@@ -143,6 +148,7 @@ class AddEditMenuController extends GetxController {
             description: description,
             isAvailable: editingItem!.isAvailable.value,
           );
+          menuCtrl.menuItems.refresh();
         }
       } else {
         final newImageUrl = (selectedImagePath.value != null &&
@@ -163,8 +169,11 @@ class AddEditMenuController extends GetxController {
             isAvailable: true,
           ),
         );
+        menuCtrl.menuItems.refresh();
       }
     }
+
+    Get.back();
 
     AppSnackbar.success(
       title: isEditing ? 'Item Updated' : 'Item Added',
@@ -172,7 +181,5 @@ class AddEditMenuController extends GetxController {
           ? '$name has been updated successfully'
           : '$name has been added to the menu',
     );
-
-    Get.back();
   }
 }

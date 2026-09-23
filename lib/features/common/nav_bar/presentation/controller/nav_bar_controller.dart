@@ -5,6 +5,7 @@ import 'package:flutter_code_structure/features/role/marchant/dashboard/presenta
 import 'package:flutter_code_structure/features/role/marchant/drivers/presentation/screen/merchant_drivers_screen.dart';
 import 'package:flutter_code_structure/features/role/marchant/menu/presentation/screen/merchant_menu_screen.dart';
 import 'package:flutter_code_structure/features/role/marchant/orders/presentation/screen/merchant_orders_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/profile/presentation/screen/merchant_profile_screen.dart';
 import '../../../../profile/presentation/screen/profile_screen.dart';
 import 'package:flutter_code_structure/features/role/driver/dashboard/presentation/screen/driver_dashboard_screen.dart';
 import 'package:flutter_code_structure/features/role/driver/orders/presentation/screen/driver_orders_screen.dart';
@@ -97,7 +98,7 @@ class NavBarController extends GetxController {
         MerchantOrdersScreen(),
         MerchantMenuScreen(),
         MerchantDriversScreen(),
-        ProfileScreen(),
+        MerchantProfileScreen(),
       ];
     } else if (isDriver) {
       return const [

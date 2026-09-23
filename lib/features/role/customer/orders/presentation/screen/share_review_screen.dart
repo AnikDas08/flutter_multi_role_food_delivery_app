@@ -22,6 +22,7 @@ class _ShareReviewScreenState extends State<ShareReviewScreen> {
   String _orderId = '#12345';
   int _selectedRating = 0; // 0 = unrated, 1 to 5 stars
   bool _isSubmitting = false;
+  bool _showOrderDelivered = true;
 
   @override
   void initState() {
@@ -35,6 +36,19 @@ class _ShareReviewScreenState extends State<ShareReviewScreen> {
       if (args['orderId'] != null && args['orderId'].toString().isNotEmpty) {
         _orderId = args['orderId'].toString();
       }
+      if (args['showOrderDelivered'] != null) {
+        _showOrderDelivered = args['showOrderDelivered'] == true;
+      }
+      if (args['fromRateApp'] == true) {
+        _showOrderDelivered = false;
+      }
+    }
+    final params = Get.parameters;
+    if (params['showOrderDelivered'] != null) {
+      _showOrderDelivered = params['showOrderDelivered'] == 'true';
+    }
+    if (params['fromRateApp'] == 'true') {
+      _showOrderDelivered = false;
     }
   }
 
@@ -250,7 +264,8 @@ class _ShareReviewScreenState extends State<ShareReviewScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           /// Top Mint Green Banner: Green Checkmark Badge, "Order Delivered!", Subtitle
-          _buildMintHeader(),
+          /// Hidden when navigated from Rate the App
+          if (_showOrderDelivered) _buildMintHeader(),
 
           /// White Section: Rating stars, Review text field, Share button, Back to Home
           _buildCardBody(),

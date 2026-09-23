@@ -25,6 +25,9 @@ import 'package:flutter_code_structure/features/role/marchant/orders/presentatio
 import 'package:flutter_code_structure/features/role/marchant/orders/presentation/screen/driver_tracking_screen.dart';
 import 'package:flutter_code_structure/features/role/marchant/menu/presentation/screen/add_edit_menu_screen.dart';
 import 'package:flutter_code_structure/features/role/marchant/drivers/presentation/screen/merchant_drivers_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/profile/presentation/screen/merchant_profile_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/profile/presentation/screen/merchant_edit_profile_screen.dart';
+import 'package:flutter_code_structure/features/role/marchant/profile/presentation/screen/merchant_business_info_screen.dart';
 import 'package:flutter_code_structure/features/role/driver/dashboard/presentation/screen/driver_dashboard_screen.dart';
 import 'package:flutter_code_structure/features/role/driver/orders/presentation/screen/driver_order_details_screen.dart';
 import 'package:flutter_code_structure/features/role/driver/earnings/presentation/screen/driver_withdraw_funds_screen.dart';
@@ -95,6 +98,9 @@ class AppRoutes {
   static const String driverTracking = '/driver_tracking_screen.dart';
   static const String addEditMenu = '/add_edit_menu_screen.dart';
   static const String merchantDrivers = '/merchant_drivers_screen.dart';
+  static const String merchantProfile = '/merchant_profile_screen.dart';
+  static const String merchantEditProfile = '/merchant_edit_profile_screen.dart';
+  static const String merchantBusinessInfo = '/merchant_business_info_screen.dart';
   static const String driverDashboard = '/driver_dashboard_screen.dart';
   static const String driverOrderDetails = '/driver_order_details_screen.dart';
   static const String driverWithdrawFunds = '/driver_withdraw_funds_screen.dart';
@@ -151,6 +157,9 @@ class AppRoutes {
     GetPage(name: driverTracking, page: () => const DriverTrackingScreen()),
     GetPage(name: addEditMenu, page: () => const AddEditMenuScreen()),
     GetPage(name: merchantDrivers, page: () => const MerchantDriversScreen()),
+    GetPage(name: merchantProfile, page: () => const MerchantProfileScreen()),
+    GetPage(name: merchantEditProfile, page: () => const MerchantEditProfileScreen()),
+    GetPage(name: merchantBusinessInfo, page: () => const MerchantBusinessInfoScreen()),
     GetPage(name: driverDashboard, page: () => const DriverDashboardScreen()),
     GetPage(name: driverOrderDetails, page: () => const DriverOrderDetailsScreen()),
     GetPage(name: driverWithdrawFunds, page: () => const DriverWithdrawFundsScreen()),

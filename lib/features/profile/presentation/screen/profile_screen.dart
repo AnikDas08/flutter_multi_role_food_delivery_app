@@ -11,6 +11,7 @@ import '../../../../component/other_widgets/item.dart';
 import '../../../../component/pop_up/common_pop_menu.dart';
 import '../../../../component/text/common_text.dart';
 
+import 'package:flutter_code_structure/features/role/marchant/profile/presentation/screen/merchant_profile_screen.dart';
 import '../../../../services/storage/storage_services.dart';
 import '../../../../utils/extensions/extension.dart';
 import '../controller/profile_controller.dart';
@@ -20,6 +21,10 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (LocalStorage.myRole.trim().toLowerCase() == 'merchant' ||
+        LocalStorage.myRole.trim().toLowerCase() == 'marchant') {
+      return const MerchantProfileScreen();
+    }
     return Scaffold(
       /// App bar
       appBar: AppBar(
