@@ -64,10 +64,11 @@ class SignUpScreen extends StatelessWidget {
               title: 'Create an Account',
               titleSize: 30,
             ),
-            body: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Form(
-                key: _formKey,
+            body: SafeArea(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Form(
+                  key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -122,7 +123,8 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ),
             ),
-          );
+          ),
+        );
         },
       ),
     );

@@ -91,6 +91,17 @@ class _AddEditMenuScreenState extends State<AddEditMenuScreen> {
 
             14.height,
 
+            /// Custom Category
+            _buildLabel('Custom Category'),
+            SizedBox(height: 6.h),
+            CommonTextField(
+              controller: controller.customCategoryController,
+              hintText: 'Enter custom category',
+              borderColor: const Color(0xFFE5E7EB),
+            ),
+
+            14.height,
+
             /// 5. Quantity Limit
             _buildLabel('Quantity Limit'),
             SizedBox(height: 6.h),

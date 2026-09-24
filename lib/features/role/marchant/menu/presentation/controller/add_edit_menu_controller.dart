@@ -11,6 +11,8 @@ class AddEditMenuController extends GetxController {
   final TextEditingController itemNameController = TextEditingController();
   final TextEditingController itemNoController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
+  final TextEditingController customCategoryController =
+      TextEditingController();
   final TextEditingController quantityLimitController =
       TextEditingController();
   final TextEditingController itemDescriptionController =
@@ -46,6 +48,7 @@ class AddEditMenuController extends GetxController {
       priceController.text = item.price.toStringAsFixed(2);
       selectedCategory.value =
           item.category.isNotEmpty ? item.category : 'Plomobites';
+      customCategoryController.text = item.customCategory;
       quantityLimitController.text = item.quantityLimit.isNotEmpty
           ? item.quantityLimit
           : 'No Limit';
@@ -62,6 +65,7 @@ class AddEditMenuController extends GetxController {
       }
       priceController.clear();
       selectedCategory.value = 'Plomobites';
+      customCategoryController.clear();
       quantityLimitController.text = 'No Limit';
       itemDescriptionController.clear();
       existingImageUrl.value = null;
@@ -74,6 +78,7 @@ class AddEditMenuController extends GetxController {
     itemNameController.dispose();
     itemNoController.dispose();
     priceController.dispose();
+    customCategoryController.dispose();
     quantityLimitController.dispose();
     itemDescriptionController.dispose();
     super.onClose();
@@ -119,7 +124,10 @@ class AddEditMenuController extends GetxController {
             : 'Item No: $itemNoText')
         : 'Item No: ${nextCount < 10 ? '0' : ''}$nextCount';
 
-    final category = selectedCategory.value ?? 'Plomobites';
+    final customCategory = customCategoryController.text.trim();
+    final category = customCategory.isNotEmpty
+        ? customCategory
+        : (selectedCategory.value ?? 'Plomobites');
     final quantityLimit = quantityLimitController.text.trim().isNotEmpty
         ? quantityLimitController.text.trim()
         : 'No Limit';
@@ -144,6 +152,7 @@ class AddEditMenuController extends GetxController {
             imageUrl: updatedImageUrl,
             itemNumber: itemNumber,
             category: category,
+            customCategory: customCategory,
             quantityLimit: quantityLimit,
             description: description,
             isAvailable: editingItem!.isAvailable.value,
@@ -164,6 +173,7 @@ class AddEditMenuController extends GetxController {
             imageUrl: newImageUrl,
             itemNumber: itemNumber,
             category: category,
+            customCategory: customCategory,
             quantityLimit: quantityLimit,
             description: description,
             isAvailable: true,

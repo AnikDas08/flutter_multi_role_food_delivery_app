@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../config/route/app_routes.dart';
 import '../../../utils/app_snackbar.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_string.dart';
@@ -204,6 +205,7 @@ void logOutPopUp({VoidCallback? onConfirm}) {
                           onConfirm();
                         } else {
                           await LocalStorage.removeAllPrefData();
+                          Get.offAllNamed(AppRoutes.roleSelection);
                           AppSnackbar.success(
                             title: 'Logged Out',
                             message: 'You have been logged out successfully.',
@@ -231,6 +233,265 @@ void logOutPopUp({VoidCallback? onConfirm}) {
               ],
             ),
           ],
+        ),
+      ),
+    ),
+    barrierDismissible: true,
+  );
+}
+
+void showDeleteAccountPopUp({
+  void Function(String password)? onConfirm,
+}) {
+  final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  final isPasswordHidden = true.obs;
+  final isDeleting = false.obs;
+
+  Get.dialog(
+    Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.symmetric(horizontal: 22.w),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 24.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 24,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              /// Soft Red Icon Header with Trash Icon
+              Container(
+                width: 60.w,
+                height: 60.w,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFFEE2E2),
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.delete_forever_rounded,
+                    color: const Color(0xFFEF4444),
+                    size: 28.sp,
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 18.h),
+
+              /// Title
+              Text(
+                'Delete Account',
+                style: GoogleFonts.roboto(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF1E293B),
+                ),
+              ),
+
+              SizedBox(height: 8.h),
+
+              /// Subtitle
+              Text(
+                'Are you sure you want to delete your account? This action is permanent and all your data will be permanently removed.',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.roboto(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xFF64748B),
+                  height: 1.45,
+                ),
+              ),
+
+              SizedBox(height: 20.h),
+
+              /// Password Input Field
+              Obx(
+                () => TextFormField(
+                  controller: passwordController,
+                  obscureText: isPasswordHidden.value,
+                  style: GoogleFonts.roboto(
+                    fontSize: 14.sp,
+                    color: const Color(0xFF1E293B),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter your password to confirm';
+                    }
+                    if (value.trim().length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Enter your password',
+                    hintStyle: GoogleFonts.roboto(
+                      fontSize: 13.5.sp,
+                      color: const Color(0xFF94A3B8),
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.lock_outline_rounded,
+                      size: 20,
+                      color: Color(0xFF64748B),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        isPasswordHidden.value
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        size: 20,
+                        color: const Color(0xFF64748B),
+                      ),
+                      onPressed: () {
+                        isPasswordHidden.value = !isPasswordHidden.value;
+                      },
+                    ),
+                    filled: true,
+                    fillColor: const Color(0xFFF8FAFC),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 14.h,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14.r),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE2E8F0),
+                        width: 1.2,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14.r),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE2E8F0),
+                        width: 1.2,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14.r),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFEF4444),
+                        width: 1.5,
+                      ),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14.r),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFEF4444),
+                        width: 1.2,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 24.h),
+
+              /// Action Buttons Row
+              Row(
+                children: [
+                  /// Cancel Button
+                  Expanded(
+                    child: SizedBox(
+                      height: 46.h,
+                      child: OutlinedButton(
+                        onPressed: () => Get.back(),
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(
+                            color: Color(0xFFE2E8F0),
+                            width: 1.2,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24.r),
+                          ),
+                          backgroundColor: Colors.white,
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: GoogleFonts.roboto(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF64748B),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(width: 12.w),
+
+                  /// Delete Button
+                  Expanded(
+                    child: SizedBox(
+                      height: 46.h,
+                      child: Obx(
+                        () => ElevatedButton(
+                          onPressed: isDeleting.value
+                              ? null
+                              : () async {
+                                  if (!formKey.currentState!.validate()) return;
+                                  isDeleting.value = true;
+                                  final enteredPassword =
+                                      passwordController.text.trim();
+                                  Get.back();
+                                  if (onConfirm != null) {
+                                    onConfirm(enteredPassword);
+                                  } else {
+                                    await LocalStorage.removeAllPrefData();
+                                    Get.offAllNamed(AppRoutes.roleSelection);
+                                    AppSnackbar.success(
+                                      title: 'Account Deleted',
+                                      message:
+                                          'Your account has been deleted permanently.',
+                                    );
+                                  }
+                                },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFEF4444),
+                            disabledBackgroundColor:
+                                const Color(0xFFEF4444).withValues(alpha: 0.6),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24.r),
+                            ),
+                          ),
+                          child: isDeleting.value
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
+                                    ),
+                                  ),
+                                )
+                              : Text(
+                                  'Delete',
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     ),

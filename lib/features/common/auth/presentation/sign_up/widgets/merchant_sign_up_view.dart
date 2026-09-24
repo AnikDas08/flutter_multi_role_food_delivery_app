@@ -55,7 +55,16 @@ class MerchantSignUpView extends StatelessWidget {
                     ),
                   ),
                 ]
-              : null,
+              : [
+                  TextSpan(
+                    text: ' (Optional)',
+                    style: GoogleFonts.roboto(
+                      color: const Color(0xFF9CA3AF),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                ],
         ),
       ),
     );
@@ -70,8 +79,6 @@ class MerchantSignUpView extends StatelessWidget {
         titleSize: 30,
       ),
       body: SafeArea(
-        top: false,
-        bottom: true,
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: Form(
@@ -218,13 +225,13 @@ class MerchantSignUpView extends StatelessWidget {
 
                 SizedBox(height: 12.h),
 
-                /// Text Title for Restaurant License (Explicit user requirement)
-                _buildFieldLabel('Restaurant License'),
+                /// Text Title for Restaurant License (Optional)
+                _buildFieldLabel('Restaurant License', isRequired: false),
                 GetBuilder<SignUpController>(
                   builder: (_) => DocumentUploadCard(
                     label: '',
-                    title: 'Upload Restaurant License',
-                    subtitle: 'PNG, JPG or PDF up to 5MB',
+                    title: 'Upload Restaurant License (Optional)',
+                    subtitle: 'PNG, JPG or PDF up to 5MB (Optional)',
                     buttonText: 'Choose File',
                     icon: Icons.cloud_upload_rounded,
                     imagePath: controller.restaurantLicenseImage,

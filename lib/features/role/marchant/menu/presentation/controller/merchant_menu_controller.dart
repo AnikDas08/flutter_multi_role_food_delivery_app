@@ -13,6 +13,7 @@ class MerchantMenuItemModel {
   final String imageUrl;
   final String itemNumber;
   final String category;
+  final String customCategory;
   final String quantityLimit;
   final String description;
   final RxBool isAvailable;
@@ -24,6 +25,7 @@ class MerchantMenuItemModel {
     required this.imageUrl,
     required this.itemNumber,
     this.category = 'Plomobites',
+    this.customCategory = '',
     this.quantityLimit = 'No Limit',
     this.description = '',
     required bool isAvailable,

@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:flutter/services.dart';
+import 'package:flutter_code_structure/features/common/nav_bar/presentation/controller/nav_bar_controller.dart';
 import '../controller/driver_profile_controller.dart';
 
 class DriverProfileScreen extends StatelessWidget {
@@ -16,180 +18,25 @@ class DriverProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /// 1. Top Header Title
-              Center(
-                child: Text(
-                  'Profile',
-                  style: GoogleFonts.roboto(
-                    fontSize: 17.sp,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF581C87),
-                  ),
-                ),
-              ),
+        child: Column(
+          children: [
+            /// 1. Top Bar: Circular Back Button, Centered "My Profile", Right Spacer
+            _buildTopBar(context),
 
-              SizedBox(height: 20.h),
-
-              /// 2. Profile Avatar with Online Badge
-              Center(
-                child: Stack(
-                  clipBehavior: Clip.none,
+            /// 2. Scrollable Body
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 96.w,
-                      height: 96.w,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: const DecorationImage(
-                          image: NetworkImage(
-                            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&q=80',
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.08),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Obx(
-                      () => controller.isOnline.value
-                          ? Positioned(
-                              right: 2.w,
-                              bottom: 2.h,
-                              child: Container(
-                                width: 22.w,
-                                height: 22.w,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF10B981),
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 2.w,
-                                  ),
-                                ),
-                                child: Icon(
-                                  Icons.check_rounded,
-                                  color: Colors.white,
-                                  size: 13.sp,
-                                ),
-                              ),
-                            )
-                          : const SizedBox.shrink(),
-                    ),
-                  ],
-                ),
-              ),
+                    /// Profile Header on Left Side (Matching Customer style)
+                    _buildProfileHeader(controller),
 
-              SizedBox(height: 14.h),
+                    SizedBox(height: 20.h),
 
-              /// 3. Driver Name
-              Center(
-                child: Obx(
-                  () => Text(
-                    controller.driverName.value,
-                    style: GoogleFonts.roboto(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1E293B),
-                    ),
-                  ),
-                ),
-              ),
-
-              SizedBox(height: 3.h),
-
-              /// Driver ID
-              Center(
-                child: Obx(
-                  () => Text(
-                    'Driver ID: ${controller.driverId.value}',
-                    style: GoogleFonts.roboto(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      color: const Color(0xFF64748B),
-                    ),
-                  ),
-                ),
-              ),
-
-              SizedBox(height: 6.h),
-
-              /// Rating and Rides
-              Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.star_rounded,
-                      color: const Color(0xFFF59E0B),
-                      size: 16.sp,
-                    ),
-                    SizedBox(width: 4.w),
-                    Obx(
-                      () => Text(
-                        controller.rating.value.toStringAsFixed(1),
-                        style: GoogleFonts.roboto(
-                          fontSize: 12.5.sp,
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFF4C1D95),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 5.w),
-                    Obx(
-                      () => Text(
-                        '(${controller.ridesCount.value} rides)',
-                        style: GoogleFonts.roboto(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xFF64748B),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 12.h),
-
-              /// Edit Profile Pill Button
-              Center(
-                child: GestureDetector(
-                  onTap: controller.onEditProfile,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 22.w,
-                      vertical: 7.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF2E0A66),
-                      borderRadius: BorderRadius.circular(20.r),
-                    ),
-                    child: Text(
-                      'Edit Profile',
-                      style: GoogleFonts.roboto(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              SizedBox(height: 20.h),
-
-              /// 4. Availability Status Card
+                    /// 4. Availability Status Card
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
@@ -369,6 +216,7 @@ class DriverProfileScreen extends StatelessWidget {
 
               /// 7. Support Center Button
               GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: controller.onSupportCenter,
                 child: Container(
                   width: double.infinity,
@@ -412,7 +260,45 @@ class DriverProfileScreen extends StatelessWidget {
 
               SizedBox(height: 12.h),
 
-              /// 8. Logout Button
+              /// 8. Delete Account Button
+              GestureDetector(
+                onTap: controller.onDeleteAccount,
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 13.h),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF1F2),
+                    borderRadius: BorderRadius.circular(14.r),
+                    border: Border.all(
+                      color: const Color(0xFFFECDD3),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.delete_outline_rounded,
+                        color: const Color(0xFFE11D48),
+                        size: 18.sp,
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        'Delete Account',
+                        style: GoogleFonts.roboto(
+                          fontSize: 13.5.sp,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFFE11D48),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 12.h),
+
+              /// 9. Logout Button
               GestureDetector(
                 onTap: controller.onLogout,
                 child: Container(
@@ -449,6 +335,259 @@ class DriverProfileScreen extends StatelessWidget {
           ),
         ),
       ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Top Bar: Back button, "My Profile", balanced spacer
+  Widget _buildTopBar(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+      child: Row(
+        children: [
+          /// Circular Back Button
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              HapticFeedback.lightImpact();
+              if (Navigator.canPop(context)) {
+                Get.back();
+              } else if (Get.isRegistered<NavBarController>()) {
+                Get.find<NavBarController>().changeIndex(0);
+              }
+            },
+            child: Container(
+              width: 42.w.clamp(38.0, 46.0),
+              height: 42.w.clamp(38.0, 46.0),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+                border: Border.all(
+                  color: const Color(0xFFE2E8F0),
+                  width: 1.2,
+                ),
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  size: 16.sp.clamp(14.0, 18.0),
+                  color: const Color(0xFF2E0A66),
+                ),
+              ),
+            ),
+          ),
+
+          /// Centered Title
+          Expanded(
+            child: Center(
+              child: Text(
+                'My Profile',
+                style: GoogleFonts.roboto(
+                  fontSize: 18.sp.clamp(16.0, 22.0),
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF2E0A66),
+                ),
+              ),
+            ),
+          ),
+
+          /// Right spacer to keep title centered
+          SizedBox(width: 42.w.clamp(38.0, 46.0)),
+        ],
+      ),
+    );
+  }
+
+  /// Profile Header Row: Avatar on Left Side, Driver Name, ID, Rating/Rides, Edit Profile Button
+  Widget _buildProfileHeader(DriverProfileController controller) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        /// Circular Avatar with Online Badge on the Left
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              width: 68.w.clamp(60.0, 76.0),
+              height: 68.w.clamp(60.0, 76.0),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: const Color(0xFFE2E8F0),
+                  width: 1.5,
+                ),
+                image: const DecorationImage(
+                  image: NetworkImage(
+                    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&q=80',
+                  ),
+                  fit: BoxFit.cover,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+            ),
+            Obx(
+              () => controller.isOnline.value
+                  ? Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                        width: 18.w,
+                        height: 18.w,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF10B981),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 2.w,
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.check_rounded,
+                          color: Colors.white,
+                          size: 11.sp,
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ],
+        ),
+
+        SizedBox(width: 14.w),
+
+        /// Name, ID, Rating/Rides, and Edit Profile Button (All on the Left)
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Obx(
+                () => Text(
+                  controller.driverName.value,
+                  style: GoogleFonts.roboto(
+                    fontSize: 17.5.sp.clamp(16.0, 19.5),
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF1E293B),
+                  ),
+                ),
+              ),
+              SizedBox(height: 2.h),
+              Obx(
+                () => Text(
+                  'Driver ID: ${controller.driverId.value}',
+                  style: GoogleFonts.roboto(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xFF64748B),
+                  ),
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.star_rounded,
+                    color: const Color(0xFFF59E0B),
+                    size: 15.sp,
+                  ),
+                  SizedBox(width: 3.w),
+                  Obx(
+                    () => Text(
+                      controller.rating.value.toStringAsFixed(1),
+                      style: GoogleFonts.roboto(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF4C1D95),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 4.w),
+                  Obx(
+                    () => Text(
+                      '(${controller.ridesCount.value} rides)',
+                      style: GoogleFonts.roboto(
+                        fontSize: 11.5.sp,
+                        fontWeight: FontWeight.w400,
+                        color: const Color(0xFF64748B),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8.h),
+
+              /// "Edit Profile" Dark Purple Pill Button
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: controller.onEditProfile,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 5.h),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2E0A66),
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Text(
+                    'Edit Profile',
+                    style: GoogleFonts.roboto(
+                      fontSize: 11.5.sp.clamp(10.5, 13.0),
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        SizedBox(width: 8.w),
+
+        /// Online Status Badge (Matching Customer Profile's right badge)
+        Obx(() {
+          final isOnline = controller.isOnline.value;
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+            decoration: BoxDecoration(
+              color: isOnline ? const Color(0xFFECFDF5) : const Color(0xFFFEF2F2),
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(
+                color: isOnline ? const Color(0xFFA7F3D0) : const Color(0xFFFECDD3),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 6.w,
+                  height: 6.w,
+                  decoration: BoxDecoration(
+                    color: isOnline ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                SizedBox(width: 4.w),
+                Text(
+                  isOnline ? 'Online' : 'Offline',
+                  style: GoogleFonts.roboto(
+                    fontSize: 11.5.sp,
+                    fontWeight: FontWeight.w600,
+                    color: isOnline ? const Color(0xFF047857) : const Color(0xFFB91C1C),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }),
+      ],
     );
   }
 

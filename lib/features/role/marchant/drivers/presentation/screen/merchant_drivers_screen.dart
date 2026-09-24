@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:flutter_code_structure/config/route/app_routes.dart';
 import '../controller/merchant_drivers_controller.dart';
 
 class MerchantDriversScreen extends StatelessWidget {
@@ -128,6 +130,24 @@ class MerchantDriversScreen extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(bottom: 8.h),
+        child: SizedBox(
+          width: 52.w,
+          height: 52.w,
+          child: FloatingActionButton(
+            onPressed: () => Get.toNamed(AppRoutes.merchantAddDriver),
+            backgroundColor: const Color(0xFF2E0A66),
+            elevation: 4,
+            shape: const CircleBorder(),
+            child: Icon(
+              Icons.add_rounded,
+              color: Colors.white,
+              size: 28.sp,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -206,35 +226,30 @@ class MerchantDriversScreen extends StatelessWidget {
         children: [
           /// Circular Driver Avatar Image
           ClipOval(
-            child: CachedNetworkImage(
-              imageUrl: driver.imageUrl,
-              width: 52.w,
-              height: 52.w,
-              fit: BoxFit.cover,
-              placeholder: (_, __) => Container(
-                width: 52.w,
-                height: 52.w,
-                color: const Color(0xFFF1F5F9),
-                child: const Center(
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-              ),
-              errorWidget: (_, __, ___) => Container(
-                width: 52.w,
-                height: 52.w,
-                color: const Color(0xFFEDE9FE),
-                child: Center(
-                  child: Text(
-                    driver.name.isNotEmpty ? driver.name[0] : 'D',
-                    style: GoogleFonts.roboto(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF6D28D9),
+            child: driver.imageUrl.startsWith('http')
+                ? CachedNetworkImage(
+                    imageUrl: driver.imageUrl,
+                    width: 52.w,
+                    height: 52.w,
+                    fit: BoxFit.cover,
+                    placeholder: (_, __) => Container(
+                      width: 52.w,
+                      height: 52.w,
+                      color: const Color(0xFFF1F5F9),
+                      child: const Center(
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            ),
+                    errorWidget: (_, __, ___) => _buildAvatarFallback(driver),
+                  )
+                : (File(driver.imageUrl).existsSync()
+                    ? Image.file(
+                        File(driver.imageUrl),
+                        width: 52.w,
+                        height: 52.w,
+                        fit: BoxFit.cover,
+                      )
+                    : _buildAvatarFallback(driver)),
           ),
 
           SizedBox(width: 12.w),
@@ -471,5 +486,23 @@ class MerchantDriversScreen extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Widget _buildAvatarFallback(DriverModel driver) {
+    return Container(
+      width: 52.w,
+      height: 52.w,
+      color: const Color(0xFFEDE9FE),
+      child: Center(
+        child: Text(
+          driver.name.isNotEmpty ? driver.name[0].toUpperCase() : 'D',
+          style: GoogleFonts.roboto(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+            color: const Color(0xFF6D28D9),
+          ),
+        ),
+      ),
+    );
   }
 }

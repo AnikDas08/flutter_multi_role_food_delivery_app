@@ -67,10 +67,11 @@ class DriverProfileController extends GetxController {
   }
 
   void onSupportCenter() {
-    AppSnackbar.success(
-      title: 'Support Center',
-      message: 'Connecting to driver support representative...',
-    );
+    Get.toNamed(AppRoutes.contactSupport);
+  }
+
+  void onDeleteAccount() {
+    showDeleteAccountPopUp();
   }
 
   void onLogout() {

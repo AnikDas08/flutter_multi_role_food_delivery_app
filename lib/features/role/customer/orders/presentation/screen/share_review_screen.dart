@@ -86,71 +86,16 @@ class _ShareReviewScreenState extends State<ShareReviewScreen> {
 
     if (!mounted) return;
 
-    // Show floating snackbar
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: const BoxDecoration(
-                color: Color(0xFF22C55E),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.check_rounded,
-                color: Colors.white,
-                size: 16,
-              ),
-            ),
-            const SizedBox(width: 12),
-            const Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Review Sent',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 2),
-                  Text(
-                    'Thank you! Your review has been submitted successfully.',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFFE2E8F0),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: const Color(0xFF1E293B),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        margin: const EdgeInsets.all(16),
-        duration: const Duration(seconds: 3),
-      ),
-    );
-
-    // Wait slightly so user sees feedback, then pop route safely
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    if (!mounted) return;
-
     if (Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
     } else {
       Get.offAllNamed(AppRoutes.mainNavBar);
     }
+
+    AppSnackbar.success(
+      title: 'Review Sent',
+      message: 'Thank you! Your review has been submitted successfully.',
+    );
   }
 
   void _onBackToHome() {

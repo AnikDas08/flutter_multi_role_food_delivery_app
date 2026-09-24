@@ -119,6 +119,13 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                         ),
                         SizedBox(height: 10.h),
                         _buildCardItem(
+                          icon: Icons.delete_outline_rounded,
+                          iconColor: const Color(0xFFEF4444),
+                          title: 'Delete Account',
+                          onTap: () => showDeleteAccountPopUp(),
+                        ),
+                        SizedBox(height: 10.h),
+                        _buildCardItem(
                           icon: Icons.logout_rounded,
                           iconColor: const Color(0xFFEF4444),
                           title: 'Logout',

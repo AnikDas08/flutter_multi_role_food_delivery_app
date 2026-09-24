@@ -10,6 +10,8 @@ class DriverModel {
   final String imageUrl;
   final bool isAvailable;
   final RxBool isAssigned;
+  final String vehicle;
+  final String email;
 
   DriverModel({
     required this.id,
@@ -17,6 +19,8 @@ class DriverModel {
     required this.phone,
     required this.imageUrl,
     required this.isAvailable,
+    this.vehicle = '',
+    this.email = '',
     bool isAssigned = false,
   }) : isAssigned = isAssigned.obs;
 }
@@ -127,5 +131,28 @@ class MerchantDriversController extends GetxController {
         message: '${driver.name} has been unassigned.',
       );
     }
+  }
+
+  void addDriver({
+    required String name,
+    required String phone,
+    String email = '',
+    String vehicle = '',
+    String? imagePath,
+    bool isAvailable = true,
+  }) {
+    final newDriver = DriverModel(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: name,
+      phone: phone,
+      imageUrl: (imagePath != null && imagePath.isNotEmpty)
+          ? imagePath
+          : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
+      isAvailable: isAvailable,
+      vehicle: vehicle,
+      email: email,
+    );
+    drivers.insert(0, newDriver);
+    drivers.refresh();
   }
 }

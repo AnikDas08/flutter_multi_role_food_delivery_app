@@ -144,6 +144,12 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                           },
                         ),
                         _buildMenuItem(
+                          icon: Icons.delete_outline_rounded,
+                          title: 'Delete Account',
+                          isLogout: true,
+                          onTap: () => showDeleteAccountPopUp(),
+                        ),
+                        _buildMenuItem(
                           icon: Icons.logout_rounded,
                           title: 'Logout',
                           isLogout: true,

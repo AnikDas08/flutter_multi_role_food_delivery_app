@@ -81,7 +81,7 @@ class _VerifyUserState extends State<VerifyUser> {
 
                     /// Subtitle
                     Text(
-                      'Enter the 6-digit code we sent to your\nemail or phone number',
+                      'Enter the 6-digit code we sent to your\nemail',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.roboto(
                         fontSize: 14.sp,

@@ -52,8 +52,6 @@ class DriverSignUpView extends StatelessWidget {
         titleSize: 30,
       ),
       body: SafeArea(
-        top: false,
-        bottom: true,
         child: SingleChildScrollView(
           padding: EdgeInsets.only(
             left: 20.w,
