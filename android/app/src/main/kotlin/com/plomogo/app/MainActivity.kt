@@ -1,4 +1,4 @@
-package com.example.flutter_code_structure
+package com.plomogo.app
 
 import io.flutter.embedding.android.FlutterActivity
 

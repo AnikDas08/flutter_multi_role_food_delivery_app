@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
 
         builder: (context, child) {
           return GetMaterialApp(
+            title: 'Plomogo',
             debugShowCheckedModeBanner: false,
             scrollBehavior: const AppScrollBehavior(),
             navigatorKey: Get.key,
